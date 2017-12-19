@@ -1,0 +1,2 @@
+from SVassembly import InterestingContigs
+from InterestingContigs import interestingContigs
