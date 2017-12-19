@@ -7,8 +7,8 @@ setup(
         description = 'SV phasing pipeline',
         author = 'Hanlee Ji lab'
         author_email = 'avitko@stanford.edu',
-        #url
-        #dowload_url
+        url = 'https://github.com/AV321/SVassembly'
+        dowload_url = 'https://github.com/AV321/SVassembly/archive/0.1.tar.gz'
         #keywords
         #classifiers
 )
