@@ -15,56 +15,7 @@ def extract_fastq(fq_path, bcs, lanes, bc_file, out_dir ):
         import gzip
         import sys
         import time
-
-if __name__ == '__main__':
-                #args = parse_args()
-                #if(args.usage):
-                        #usage()
-                if(not fq_path or not bcs or not lanes or not bc_file or not out_dir): #or not args.s_in):
-                        print os.path.basename(main.__file__) + " missing a required input\n"
-                        #usage()
-                        sys.exit(1)
-
-def extract_reads(args_fq): #from (args_fq)
-
-                bcs = [] 
-                out_file = gzip.open(args_fq[3],'w')  
-                out_si_file = gzip.open(args_fq[4],'w')  
-
-
-                with open(args_fq[2],'r') as f:
-                        for line in csv.reader(f,delimiter='\t'): 
-                                bcs.append(line[0])
-
-                bcs = set(bcs)
-
-                n = 0
-                i = 0
-                
-                with gzip.open(args_fq[0], 'r') as f, gzip.open(args_fq[1],'r') as ind:   
-                        cur_time = time.time()
-                       
-                        while True:
-                                lines = list(islice(f,8)) #slice after index 8 of fastq
-                                lines_index = list(islice(ind,4)) #slice after index 4 of si_fastq (file of indices)
-
-                                if not lines:
-                                        break
-
-                                n = n + 1
-                                if (n % 1000000 == 0): #after 1M rounds. why does time matter?
-                                        print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
-                                        cur_time = time.time()
-
-                                if (lines[1][0:16] in bcs): #if barcodes match?
-                                        i = i + 1
-
-                                        for line in lines:
-                                                out_file.write(line)
-                                        for line in lines_index:
-                                                out_si_file.write(line)
-
-
+        
         bc_list = bcs.split(",")
 
         lane_list = lanes.split(",")
@@ -93,6 +44,56 @@ def extract_reads(args_fq): #from (args_fq)
 
 
                         extract_reads(cmd_list)
+
+#if __name__ == '__main__':
+                #args = parse_args()
+                #if(args.usage):
+                        #usage()
+                #if(not fq_path or not bcs or not lanes or not bc_file or not out_dir): #or not args.s_in):
+                        #print os.path.basename(main.__file__) + " missing a required input\n"
+                        #usage()
+                        #sys.exit(1)
+
+def extract_reads(args_fq): #from (args_fq)
+
+        bcs = [] 
+        out_file = gzip.open(args_fq[3],'w')  
+        out_si_file = gzip.open(args_fq[4],'w')  
+
+
+        with open(args_fq[2],'r') as f:
+                for line in csv.reader(f,delimiter='\t'): 
+                        bcs.append(line[0])
+
+        bcs = set(bcs)
+
+        n = 0
+        i = 0
+
+        with gzip.open(args_fq[0], 'r') as f, gzip.open(args_fq[1],'r') as ind:   
+                cur_time = time.time()
+
+                while True:
+                        lines = list(islice(f,8)) #slice after index 8 of fastq
+                        lines_index = list(islice(ind,4)) #slice after index 4 of si_fastq (file of indices)
+
+                        if not lines:
+                                break
+
+                        n = n + 1
+                        if (n % 1000000 == 0): #after 1M rounds. why does time matter?
+                                print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
+                                cur_time = time.time()
+
+                        if (lines[1][0:16] in bcs): #if barcodes match?
+                                i = i + 1
+
+                                for line in lines:
+                                        out_file.write(line)
+                                for line in lines_index:
+                                        out_si_file.write(line)
+
+        
 
 
                        
