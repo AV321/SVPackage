@@ -1,11 +1,13 @@
-def map_to_genome(infile, out_folder):
-    #%matplotlib inline
-    import pandas as pd
+import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
     import csv
     from scipy.stats import mode
     import math as m #have to install in testing environment
+
+def map_to_genome(infile, out_folder):
+    #%matplotlib inline
+    
     
     df = pd.read_table(infile) #"/mnt/ix2/avitko/170621_SV_phasing/A04_plotting/out_metr_192.merge.txt"
     df = df.loc[df['chr_x'] <= 23]
