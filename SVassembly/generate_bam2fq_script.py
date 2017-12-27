@@ -1,20 +1,20 @@
 #!/usr/bin/env python #is this necessary within package?
 
+### LOAD THE NECESSARY PACKAGES ###
+
+import os, sys, argparse, __main__ as main
+import pandas as pd
+
+import csv
+import pysam
+import distance
+from itertools import izip_longest, islice
+import gzip
+import sys
+import time
+
 def extract_fastq(fq_path, bcs, lanes, bc_file, out_dir ):
         cur_version = 1.0
-
-        ### LOAD THE NECESSARY PACKAGES ###
-
-        import os, sys, argparse, __main__ as main
-        import pandas as pd
-
-        import csv
-        import pysam
-        import distance
-        from itertools import izip_longest, islice
-        import gzip
-        import sys
-        import time
         
         bc_list = bcs.split(",")
 
