@@ -1,5 +1,5 @@
 def map_to_genome(infile, out_folder):
-    %matplotlib inline
+    #%matplotlib inline
     import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
@@ -56,7 +56,7 @@ def map_to_chr(chrm, grouped, out_folder):
     plt.xlabel("contig coordinate (10^%d)" % y_col_pow)
     plt.ylabel("chr %d coordinate (10^%d)" % (chrm, x_col_pow))
   
-    plt.show()
+    #plt.show()
   
     #saving to a folder
     path = out_folder + ("/Chr_%d" %chrm)
