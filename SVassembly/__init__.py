@@ -6,3 +6,6 @@ from plotting import map_to_genome
 
 from SVassembly import generate_bam2fq_script
 from generate_bam2fq_script import extract_fastq
+
+from SVassembly import sv-phasing_linkedreads
+from sv-phasing_linkedreads import count_bcs
