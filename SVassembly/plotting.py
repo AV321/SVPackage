@@ -1,9 +1,9 @@
 import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import csv
-    from scipy.stats import mode
-    import math as m #have to install in testing environment
+import numpy as np
+import matplotlib.pyplot as plt
+import csv
+from scipy.stats import mode
+import math as m #have to install in testing environment
 
 def map_to_genome(infile, out_folder):
     #%matplotlib inline
