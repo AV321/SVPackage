@@ -1,6 +1,7 @@
 #!/usr/bin/env python #is this necessary within package?
 
 ### LOAD THE NECESSARY PACKAGES ###
+##This is for version 2.0(?)
 
 import os, sys, argparse, __main__ as main
 import pandas as pd
@@ -13,7 +14,13 @@ import gzip
 import sys
 import time
 
-def extract_fastq(fq_path, bcs, lanes, bc_file, out_dir ):
+def extract_fastq(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
+        
+        #"/mnt/ix1/Seq_Runs/20160122_CC3_0317/Analysis/fastq"
+        #"ACGACGCT,CGCCATTC,GTAGTCAG,TATTGAGA"
+        #"1,5"
+        #"bcs_metr.txt" "/mnt/ix2/avitko/170621_SV_phasing/A02_bcl_to_fastq/bcs_metr.txt"
+        #"/mnt/ix2/avitko/170621_SV_phasing/A02_bcl_to_fastq/out_metr"
         cur_version = 1.0
         
         bc_list = bcs.split(",")
@@ -54,7 +61,7 @@ def extract_fastq(fq_path, bcs, lanes, bc_file, out_dir ):
                         #usage()
                         #sys.exit(1)
 
-def extract_reads(args_fq): #from (args_fq)
+def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be main
 
         bcs = [] 
         out_file = gzip.open(args_fq[3],'w')  
@@ -81,7 +88,7 @@ def extract_reads(args_fq): #from (args_fq)
                                 break
 
                         n = n + 1
-                        if (n % 1000000 == 0): #after 1M rounds. why does time matter?
+                        if (n % 1000000 == 0): 
                                 print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
                                 cur_time = time.time()
 
