@@ -7,11 +7,11 @@ import os, sys, argparse, __main__ as main
 import pandas as pd
 
 import csv
-import pysam
-import distance
+#import pysam
+#import distance
 from itertools import izip_longest, islice
 import gzip
-import sys
+#import sys
 import time
 
 def extract_fastq(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
