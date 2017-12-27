@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
         name = 'SVassembly',
         packages = ['SVassembly'],
-        version = '0.2dev',
+        version = '0.3',
         description = 'SV phasing pipeline',
         author = 'Hanlee Ji lab',
         author_email = 'avitko@stanford.edu',
