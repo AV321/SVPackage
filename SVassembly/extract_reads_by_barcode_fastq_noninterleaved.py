@@ -2,30 +2,29 @@
 
 import csv
 import pysam
-import argparse
-from numba import jit
-import distance
-import editdistance
+#import argparse
+#from numba import jit
+#import distance
+#import editdistance
 from itertools import izip_longest, islice
 import gzip
 import sys
 import time
+#from bisect import bisect_left
 
-
-def calcmin(x_num,x_list):
+"""def calcmin(x_num,x_list):
 	#dist = min(x_list, key=lambda x:abs(x-x_num))
 	dist = min(abs(x_list - x_num))
-	return dist
+	return dist"""
 
-from bisect import bisect_left
 
 #http://stackoverflow.com/questions/12141150/from-list-of-integers-get-number-closest-to-a-given-value
-@jit
+"""@jit
 def takeClosest(myList, myNumber):
 	"""
-	Assumes myList is sorted. Returns closest value to myNumber.
+	#Assumes myList is sorted. Returns closest value to myNumber.
 
-	If two numbers are equally close, return the smallest number.
+	#If two numbers are equally close, return the smallest number.
 	"""
 	pos = bisect_left(myList, myNumber)
 	if pos == 0:
@@ -37,17 +36,17 @@ def takeClosest(myList, myNumber):
 	if after - myNumber < myNumber - before:
 	   return after
 	else:
-	   return before
+	   return before""" #don't end up using this
 	   
 #http://stackoverflow.com/questions/6335839/python-how-to-read-n-number-of-lines-at-a-time
 
-@jit
+"""@jit
 def grouper(iterable, n, fillvalue=None):
     "grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
     args = [iter(iterable)] * n
-    return izip_longest(*args, fillvalue=fillvalue)
+    return izip_longest(*args, fillvalue=fillvalue)""" #don't end up using this
 
-def parse_commandline():
+"""def parse_commandline():
 	parser=argparse.ArgumentParser()
 	parser.add_argument('--r1', help='10X R1 fastq.gz file',required=True)
 	parser.add_argument('--r2', help='10X R2 fastq.gz file',required=True)
@@ -58,26 +57,26 @@ def parse_commandline():
 	parser.add_argument('--out_i1', help='output I1 fastq file', required=True)
 
 	args=parser.parse_args()
-	return args
+	return args"""
 
-def main(args):
+def extract_reads(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
 		   
-	bcs = []
-	out_r1_file = gzip.open(args.out_r1,'w')
-	out_r2_file = gzip.open(args.out_r2,'w')
-	out_si_file = gzip.open(args.out_i1,'w')
+	bcs_list = []
+	out_r1_file = gzip.open(out_r1,'w')
+	out_r2_file = gzip.open(out_r2,'w')
+	out_si_file = gzip.open(out_i1,'w')
 
 	
-	with open(args.bcs,'r') as f:
+	with open(bcs,'r') as f:
 		for line in csv.reader(f,delimiter='\t'):
-			bcs.append(line[0])
+			bcs_list.append(line[0])
 	
-	bcs = set(bcs)
+	bcs_set = set(bcs_list)
 	
 	n = 0
 	i = 0
 	
-	with gzip.open(args.r1, 'r') as f1, gzip.open(args.r2, 'r') as f2, gzip.open(args.i1,'r') as ind:
+	with gzip.open(r1, 'r') as f1, gzip.open(r2, 'r') as f2, gzip.open(i1,'r') as ind:
 		cur_time = time.time()
 		#don't use grouper -- it's slow
 		#for (lines,lines_index) in zip(grouper(f, 8, ""),grouper(ind,8,"")):
@@ -94,7 +93,7 @@ def main(args):
 				print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
 				cur_time = time.time()
 			
-			if (lines_r1[1][0:16] in bcs):
+			if (lines_r1[1][0:16] in bcs_set):
 				i = i + 1
 				
 				for line in lines_r1:
@@ -105,6 +104,6 @@ def main(args):
 					out_si_file.write(line)
 				
 
-if __name__ == '__main__':
+"""if __name__ == '__main__':
         args=parse_commandline()
-        main(args)
+        main(args)"""
