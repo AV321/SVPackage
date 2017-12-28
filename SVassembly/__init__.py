@@ -9,3 +9,6 @@ from generate_bam2fq_script import extract_fastq
 
 from SVassembly import count_bcs_in_windows
 from count_bcs_in_windows import bcs_count #can't have "-" 
+
+from SVassembly import filt_svs
+from filt_svs import filter_svs
