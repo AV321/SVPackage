@@ -14,7 +14,7 @@ import gzip
 #import sys
 import time
 
-def extract_fastq(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
+def extract_readsv2_0(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
         
         #"/mnt/ix1/Seq_Runs/20160122_CC3_0317/Analysis/fastq"
         #"ACGACGCT,CGCCATTC,GTAGTCAG,TATTGAGA"
