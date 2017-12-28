@@ -59,7 +59,7 @@ def grouper(iterable, n, fillvalue=None):
 	args=parser.parse_args()
 	return args"""
 
-def extract_reads(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
+def extract_readsv2_1(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
 		   
 	bcs_list = []
 	out_r1_file = gzip.open(out_r1,'w')
