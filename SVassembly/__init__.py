@@ -5,7 +5,10 @@ from SVassembly import plotting
 from plotting import map_to_genome
 
 from SVassembly import generate_bam2fq_script
-from generate_bam2fq_script import extract_fastq
+from generate_bam2fq_script import extract_readsv2_0  #LR v2.0
+
+from SVassembly import extract_reads_by_barcode_fastq_noninterleaved
+from extract_reads_by_barcode_fastq_noninterleaved import extract_readsv2_1 #LR v2.1
 
 from SVassembly import count_bcs_in_windows
 from count_bcs_in_windows import bcs_count #can't have "-" 
