@@ -40,13 +40,13 @@ pd.options.mode.chained_assignment = None
 
 ### ARGPARSE PARSING ###
 
-def usage():
+"""def usage():
 	print "Usage examples:"
 	print os.path.basename(main.__file__) + " --help"
 	print os.path.basename(main.__file__) + " -vnorm longranger_normal.vcf.gz -vtum longranger_tumor.vcf.gz -sv longranger_svs_tumor.bedpe -bam longranger_tumor.bam  -w window_size -out output_prefix"
-	sys.exit(0)
+	sys.exit(0)"""
 
-def parse_args():
+"""def parse_args():
 	parser = argparse.ArgumentParser(description = "A Python script for annotating the SVs called by longranger")
 	parser.add_argument("--usage", help="usage example", dest="usage", action='store_true')
 	parser.add_argument("-vnorm", help="bgzipped VCF file of phased normal SNVs called by longranger -- must be tabix indexed (REQUIRED)", dest="vnorm_in")
@@ -57,27 +57,30 @@ def parse_args():
 	parser.add_argument("-out", help="prefix for output files (REQUIRED)", dest="out_in")
 
 	parser.add_argument("--version", action='version', version='%(prog)s ' + str(cur_version))	
-	return parser.parse_args()
+	return parser.parse_args()"""
 
 
-if __name__ == '__main__':
+"""if __name__ == '__main__':
 	args = parse_args()
 	if(args.usage):
 		usage()
 	if(not args.vnorm_in or not args.vtum_in or not args.sv_in or not args.bam_in or not args.out_in):
 		print os.path.basename(main.__file__) + " missing a required input file\n"
 		usage()
-		sys.exit(1)
+		sys.exit(1)"""
 
 ### SET THE ARGUMENTS ###
 
-vcf_norm_input = args.vnorm_in
-vcf_tum_input = args.vtum_in
-sv_input = args.sv_in
-bam_input = args.bam_in
-window_size = int(args.w_in)
-outpre = args.out_in
+"""vcf_norm_input = args.vnorm_in #-vnorm
+vcf_tum_input = args.vtum_in #-vtum
+sv_input = args.sv_in #-sv
+bam_input = args.bam_in #-bam
+window_size = int(args.w_in) #-w, not req
+outpre = args.out_in #-out"""
 
+#(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_size)
+#" -vnorm longranger_normal.vcf.gz -vtum longranger_tumor.vcf.gz 
+#-sv longranger_svs_tumor.bedpe -bam longranger_tumor.bam  -w window_size -out output_prefix"
 
 #+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
 # Parse SV input file to desired format                                       #
@@ -98,118 +101,6 @@ def window_rows(r,w):
     wndw_row = [ r['name'],r['chrom1'],r['start1'],r['stop1'],r['chrom2'],r['start2'],r['stop2'],r['name1'],r['chrom1']] + make_window(r['start1'],r['stop1'],w) + [r['name2'],r['chrom2']] + make_window(r['start2'],r['stop2'],w)
     return wndw_row
 
-## READ IN SV FILE + PARSE TO DESIRED FORMAT
-
-df_sv = pd.read_table(sv_input, sep="\t")
-df_sv = df_sv.rename(columns = {'#chrom1':'chrom1'})
-
-df_sv['name1'] = df_sv['name'].apply(lambda x: str(x) + "_1")
-df_sv['name2'] = df_sv['name'].apply(lambda x: str(x) + "_2")
-
-df_sv = df_sv[['name','name1','chrom1','start1','stop1','name2','chrom2','start2','stop2']]
-
-
-## CREATE A DATA FRAME OF BREAKPOINTS WHERE WINDOW IS 100KB, THEN TURN DF INTO LIST OF LISTS
-sv_wndw = df_sv.apply(lambda row: window_rows(row,window_size), axis=1)
-df_wndw = pd.DataFrame(list(sv_wndw))
-df_wndw.columns = ['name','chrom1','start1','stop1','chrom2','start2','stop2','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']
-
-## Generate list of columns to loop through
-sv_wndw = df_wndw[['name','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']].values.tolist()
-
-
-#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
-# Get SV-specific barcodes from bam file                                      #
-#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
-
-## DEFINE FUNCTION TO OBTAIN BARCODES FROM BAM FILE FOR SPECIFIC REGIONS
-
-def get_barcodes(bam_in, chrom, start, end, min_mapq, perf_cigar):
-        bcs = set()
-        for r in bam_in.fetch(chrom, start, end):
-                if r.has_tag("BX") and r.mapq >= min_mapq and (not(perf_cigar) or (not(r.cigar is None) and len(r.cigar) == 1)):
-                    bc_id=r.get_tag("BX")
-                    bcs.add(bc_id)
-        return list(bcs)
-    
-## OBTAIN SV-SPECIFIC BARCODES + THEN INTERSECT BETWEEN EVENTS TO LOOK FOR SHARED BARCODES
-
-MIN_MAPQ = 0
-PERF_CIGAR = False
-WINDOW_SIZE = 0
-
-bam_file = pysam.AlignmentFile(bam_input, "rb")
-
-bam_data = []
-
-for (name,name_1,chrom_1,start_1,end_1,name_2,chrom_2,start_2,end_2) in sv_wndw:
-    
-    name_1, chrom_1, name_2, chrom_2 = str(name_1), str(chrom_1), str(name_2), str(chrom_2)
-    start_1, end_1, start_2, end_2 = int(start_1), int(end_1), int(start_2), int(end_2)
-    
-    # Obtain + count SV-specific barcodes
-    bc_1 = get_barcodes(bam_file,chrom_1,start_1,end_1,MIN_MAPQ,PERF_CIGAR)
-    bc_1_unq = set(bc_1)
-    bc_1_num = len(bc_1_unq)
-    
-    bc_2 = get_barcodes(bam_file,chrom_2,start_2,end_2,MIN_MAPQ,PERF_CIGAR)
-    bc_2_unq = set(bc_2)
-    bc_2_num = len(bc_2_unq)
-    
-    # Intersect SV-specific barcodes
-    bc_overlap = bc_1_unq & bc_2_unq
-    num_overlaps = len(bc_overlap)
-    
-    bam_bc_list = [name_1.split("_")[0], bc_1_num, bc_2_num, num_overlaps, list(bc_1_unq), list(bc_2_unq), list(bc_overlap)]
-    
-    bam_data.append(bam_bc_list)
-    
-# Convert list to data frame + write specified columns to output
-df_bam = pd.DataFrame(bam_data)
-df_bam.columns = ['name','bc_1_num','bc_2_num','bc_overlap_num','bc_1_id','bc_2_id','bc_overlap_id']
-
-## CREATE TABLE CONTAINING EVENTS ALONG WITH THEIR SV-SPECIFIC BARCODES
-
-df_wndw[['name']], df_bam[['name']] = df_wndw[['name']].astype(str), df_bam[['name']].astype(str)
-df_bc = pd.merge(df_wndw, df_bam, on='name')
-
-
-#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
-# Pairwise intersection of SV-specific barcodes                               #
-#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
-
-## PERFORM PAIRWISE INTERSECTION OF SV CANDIDATES (i.e. INTERSECTION OF INTERSECTION)
-sv_inter = []
-
-sv_spec_bcs = df_bc['bc_overlap_id'].values.tolist()
-sv_names = list(df_bc['name'])
-
-for bcs in sv_spec_bcs:
-    sv_inter.append([set(bcs) & set(x) for x in sv_spec_bcs]) # '&' performs the intersection
-
-    
-## COUNT BARCODES IN LISTS FROM PREVIOUS STEP + GENERATE ADJACENCY MATRIX
-
-sv_inter_matrix = []
-
-for inter in sv_inter:
-    sv_inter_matrix.append([len(x) for x in inter])
-sv_inter_matrix = np.matrix(sv_inter_matrix)
-
-## CONVERT TO DF + WRITE TO OUTPUT
-
-df_inter = pd.DataFrame(sv_inter_matrix, columns=sv_names)
-df_inter['name'] = sv_names
-
-df_isect = pd.merge(df_bc, df_inter, on='name')
-#print df_merge
-
-df_isect.to_csv(outpre + ".sv_bcs.txt", sep="\t", index=False)
-
-
-#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
-# GET INFO FROM VCF FILES                                                                #
-#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
 
 ### DEFINE FUNCTIONS TO PARSE VCF FILES
 
@@ -232,165 +123,288 @@ def vcf_info_tum(n,bn,c,s,e,olist):
                 bc_2 = record.genotype(tum_smpl)['BX'][1]
                 fields = "n, bn,record.genotype(tum_smpl)['PS'], record.CHROM, record.POS, record.REF, record.ALT, record.genotype(tum_smpl)['GT'], bc_1, bc_2"
                 olist.append(eval(fields))     
+		
+## DEFINE FUNCTION TO OBTAIN BARCODES FROM BAM FILE FOR SPECIFIC REGIONS
+
+def get_barcodes(bam_in, chrom, start, end, min_mapq, perf_cigar):
+        bcs = set()
+        for r in bam_in.fetch(chrom, start, end):
+                if r.has_tag("BX") and r.mapq >= min_mapq and (not(perf_cigar) or (not(r.cigar is None) and len(r.cigar) == 1)):
+                    bc_id=r.get_tag("BX")
+                    bcs.add(bc_id)
+        return list(bcs)		
+		
+## READ IN SV FILE + PARSE TO DESIRED FORMAT
+
+#" -vnorm longranger_normal.vcf.gz 
+#-vtum longranger_tumor.vcf.gz 
+#-sv longranger_svs_tumor.bedpe 
+#-bam longranger_tumor.bam 
+#-out output_prefix
+#-w window_size"
+
+def phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_size):
+	df_sv = pd.read_table(sv_input, sep="\t")
+	df_sv = df_sv.rename(columns = {'#chrom1':'chrom1'})
+
+	df_sv['name1'] = df_sv['name'].apply(lambda x: str(x) + "_1")
+	df_sv['name2'] = df_sv['name'].apply(lambda x: str(x) + "_2")
+
+	df_sv = df_sv[['name','name1','chrom1','start1','stop1','name2','chrom2','start2','stop2']]
 
 
-## OPEN VCF FILES
+	## CREATE A DATA FRAME OF BREAKPOINTS WHERE WINDOW IS 100KB, THEN TURN DF INTO LIST OF LISTS
+	sv_wndw = df_sv.apply(lambda row: window_rows(row,window_size), axis=1)
+	df_wndw = pd.DataFrame(list(sv_wndw))
+	df_wndw.columns = ['name','chrom1','start1','stop1','chrom2','start2','stop2','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']
 
-vcf_reader_norm = vcf.Reader(filename=vcf_norm_input)
-norm_smpl = vcf_reader_norm.samples[0]
-vcf_data_norm = []
-
-vcf_reader_tum = vcf.Reader(filename=vcf_tum_input)
-tum_smpl = vcf_reader_tum.samples[0]
-vcf_data_tum = []
+	## Generate list of columns to loop through
+	sv_wndw = df_wndw[['name','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']].values.tolist()
 
 
-## OBTAIN SNVs + INFO FROM NORMAL VCF FILE -- will use normal file to define phase blocks + phase of variants 
-
-for (name,name_1,chrom_1,start_1,end_1,name_2,chrom_2,start_2,end_2) in sv_wndw:
-    name,name_1,chrom_1,name_2,chrom_2 = str(name),str(name_1),str(chrom_1),str(name_2),str(chrom_2)
-    start_1,end_1,start_2,end_2 = int(start_1),int(end_1),int(start_2),int(end_2)
-    
-    vcf_info_norm(name,name_1,chrom_1,start_1,end_1,vcf_data_norm)
-    vcf_info_norm(name,name_2,chrom_2,start_2,end_2,vcf_data_norm)
+	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
+	# Get SV-specific barcodes from bam file                                      #
+	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
 
 
-## OBTAIN SNVs + INFO FROM TUMOR VCF FILE -- will use tumor file to obtain barcodes of phased variants
+	## OBTAIN SV-SPECIFIC BARCODES + THEN INTERSECT BETWEEN EVENTS TO LOOK FOR SHARED BARCODES
 
-    vcf_info_tum(name,name_1,chrom_1,start_1,end_1,vcf_data_tum)
-    vcf_info_tum(name,name_2,chrom_2,start_2,end_2,vcf_data_tum)
+	MIN_MAPQ = 0
+	PERF_CIGAR = False
+	WINDOW_SIZE = 0
 
+	bam_file = pysam.AlignmentFile(bam_input, "rb")
 
-## MERGE VCF INFO DATA FRAMES THEN ADJUST BARCODE COLUMN ORDER TO REFLECT HAPLOTYPES
+	bam_data = []
 
-df_norm = pd.DataFrame(vcf_data_norm)
-df_norm.columns = ['name','bp_name','phase_id_norm','chr','pos','ref_norm','alt_norm','gt_norm']
+	for (name,name_1,chrom_1,start_1,end_1,name_2,chrom_2,start_2,end_2) in sv_wndw:
 
-df_tum = pd.DataFrame(vcf_data_tum)
-df_tum.columns = ['name','bp_name','phase_id_tum','chr','pos','ref_tum','alt_tum','gt_tum', 'bc_1', 'bc_2']
+	    name_1, chrom_1, name_2, chrom_2 = str(name_1), str(chrom_1), str(name_2), str(chrom_2)
+	    start_1, end_1, start_2, end_2 = int(start_1), int(end_1), int(start_2), int(end_2)
 
-vcf_merge = pd.merge(df_norm, df_tum, on=['name','bp_name','chr','pos'], how="inner")
+	    # Obtain + count SV-specific barcodes
+	    bc_1 = get_barcodes(bam_file,chrom_1,start_1,end_1,MIN_MAPQ,PERF_CIGAR)
+	    bc_1_unq = set(bc_1)
+	    bc_1_num = len(bc_1_unq)
 
-vcf_merge['bc_1_phased'] = vcf_merge.apply(lambda row: row['bc_1'] if row['gt_norm']=='0|1' else row['bc_2'], axis=1)
-vcf_merge['bc_2_phased'] = vcf_merge.apply(lambda row: row['bc_1'] if row['gt_norm']=='1|0' else row['bc_2'], axis=1)
+	    bc_2 = get_barcodes(bam_file,chrom_2,start_2,end_2,MIN_MAPQ,PERF_CIGAR)
+	    bc_2_unq = set(bc_2)
+	    bc_2_num = len(bc_2_unq)
 
+	    # Intersect SV-specific barcodes
+	    bc_overlap = bc_1_unq & bc_2_unq
+	    num_overlaps = len(bc_overlap)
 
-#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
-# Overlap SV-specific barcodes with barcodes of phased SNVs                   #
-#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
+	    bam_bc_list = [name_1.split("_")[0], bc_1_num, bc_2_num, num_overlaps, list(bc_1_unq), list(bc_2_unq), list(bc_overlap)]
 
-## CREATE A LIST OF HAPLOTYPE-SPECIFIC BARCODES FOR EACH PHASED VARIANT 
+	    bam_data.append(bam_bc_list)
 
-bc_1_list = vcf_merge['bc_1_phased'].tolist()
-bc_1_list_mod = []
-for bc_ls in bc_1_list:
-    new_bc_ls = bc_ls.split(';')
-    new_bc_ls_mod = [b.split('_')[0] for b in new_bc_ls]
-    bc_1_list_mod.append(new_bc_ls_mod)
-    
-bc_2_list = vcf_merge['bc_2_phased'].tolist()
-bc_2_list_mod = []
-for bc_ls in bc_2_list:
-    new_bc_ls = bc_ls.split(';')
-    new_bc_ls_mod = [b.split('_')[0] for b in new_bc_ls]
-    bc_2_list_mod.append(new_bc_ls_mod)
+	# Convert list to data frame + write specified columns to output
+	df_bam = pd.DataFrame(bam_data)
+	df_bam.columns = ['name','bc_1_num','bc_2_num','bc_overlap_num','bc_1_id','bc_2_id','bc_overlap_id']
 
-## INTERSECT "SV-SPECIFIC" BARCODES WITH LIST OF BCS FOR EACH PHASED VARIANT (GENERATED ABOVE) -- COUNT NUMBER OF OVERLAPPING BARCODES
+	## CREATE TABLE CONTAINING EVENTS ALONG WITH THEIR SV-SPECIFIC BARCODES
 
-for index, row in df_isect.iterrows():    
-
-    sv_bcs = row['bc_overlap_id']
-    sv_id = row['name']
-
-    overlap_bcs_1 = []
-    overlap_counts_1 = []
-    for b in bc_1_list_mod:
-        bc_overlap_1 = list(set(sv_bcs) & set(b))
-        num_overlaps = len(bc_overlap_1)
-        overlap_bcs_1.append(bc_overlap_1)
-        overlap_counts_1.append(num_overlaps)
-
-    overlap_bcs_2 = []
-    overlap_counts_2 = []
-    for b in bc_2_list_mod:
-        bc_overlap_2 = list(set(sv_bcs) & set(b))
-        num_overlaps = len(bc_overlap_2)
-        overlap_bcs_2.append(bc_overlap_2)
-        overlap_counts_2.append(num_overlaps)
-
-    vcf_merge[str(sv_id) + "_hap1_overlap_count"] = overlap_counts_1
-    vcf_merge[str(sv_id) + "_hap2_overlap_count"] = overlap_counts_2
-    
-    vcf_merge[str(sv_id) + "_hap1_overlap_bcs"] = overlap_bcs_1
-    vcf_merge[str(sv_id) + "_hap2_overlap_bcs"] = overlap_bcs_2
+	df_wndw[['name']], df_bam[['name']] = df_wndw[['name']].astype(str), df_bam[['name']].astype(str)
+	df_bc = pd.merge(df_wndw, df_bam, on='name')
 
 
-## ADD COUNTS OF UNIQUE BARCODES FOR EACH BREAKPOINT
+	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
+	# Pairwise intersection of SV-specific barcodes                               #
+	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
 
-bp_list = list(set(vcf_merge['bp_name']))
-sv_list = list(set(vcf_merge['name']))
+	## PERFORM PAIRWISE INTERSECTION OF SV CANDIDATES (i.e. INTERSECTION OF INTERSECTION)
+	sv_inter = []
 
-df_bp_list = []
+	sv_spec_bcs = df_bc['bc_overlap_id'].values.tolist()
+	sv_names = list(df_bc['name'])
 
-for sv in sv_list:
-    df_bp_name = sv + "_bc_counts_bp"
-    hap1_bc_col = sv + "_hap1_overlap_bcs"
-    hap2_bc_col = sv + "_hap2_overlap_bcs"
-    df_bp_name = vcf_merge.groupby(['name','bp_name','phase_id_norm']).agg({hap1_bc_col:'sum', hap2_bc_col: 'sum'}).reset_index()
-    df_bp_name[sv + "_hap1_overlap_count_bp"] = df_bp_name[hap1_bc_col].apply(lambda x: len(set(x)))
-    df_bp_name[sv + "_hap2_overlap_count_bp"] = df_bp_name[hap2_bc_col].apply(lambda x: len(set(x)))
-    df_bp_name.rename(columns = {hap1_bc_col: sv + "_hap1_overlap_bcs_bp", hap2_bc_col: sv + "_hap2_overlap_bcs_bp"}, inplace=True)
-    df_bp_list.append(df_bp_name)
+	for bcs in sv_spec_bcs:
+	    sv_inter.append([set(bcs) & set(x) for x in sv_spec_bcs]) # '&' performs the intersection
 
 
-df_bp_counts = reduce(lambda x, y: pd.merge(x, y, on = ['name','bp_name','phase_id_norm']), df_bp_list)
+	## COUNT BARCODES IN LISTS FROM PREVIOUS STEP + GENERATE ADJACENCY MATRIX
+
+	sv_inter_matrix = []
+
+	for inter in sv_inter:
+	    sv_inter_matrix.append([len(x) for x in inter])
+	sv_inter_matrix = np.matrix(sv_inter_matrix)
+
+	## CONVERT TO DF + WRITE TO OUTPUT
+
+	df_inter = pd.DataFrame(sv_inter_matrix, columns=sv_names)
+	df_inter['name'] = sv_names
+
+	df_isect = pd.merge(df_bc, df_inter, on='name')
+	#print df_merge
+
+	df_isect.to_csv(outpre + ".sv_bcs.txt", sep="\t", index=False)
 
 
-## ADD COUNTS OF UNIQUE BARCODES FOR EACH SV
-
-sv_list = list(set(vcf_merge['name']))
-
-df_sv_list = []
-
-for sv in sv_list:
-    df_sv_name = sv + "_bc_counts_sv"
-    hap1_bc_col = sv + "_hap1_overlap_bcs"
-    hap2_bc_col = sv + "_hap2_overlap_bcs"
-    
-    df_sv_name = vcf_merge.groupby(['name','phase_id_norm']).agg({hap1_bc_col:'sum', hap2_bc_col: 'sum'}).reset_index()
-
-    df_sv_name[sv + "_hap1_overlap_count_sv"] = df_sv_name[hap1_bc_col].apply(lambda x: len(set(x)))
-    df_sv_name[sv + "_hap2_overlap_count_sv"] = df_sv_name[hap2_bc_col].apply(lambda x: len(set(x)))
-    df_sv_name[sv + "_both_overlap_count_bp"] = df_sv_name.apply(lambda row: len(set(row[hap1_bc_col]).intersection(set(row[hap2_bc_col]))), axis=1)
-    df_sv_name.rename(columns = {hap1_bc_col: sv + "_hap1_overlap_bcs_sv", hap2_bc_col: sv + "_hap2_overlap_bcs_sv"}, inplace=True)
-    df_sv_list.append(df_sv_name)
-    
-df_sv_counts = reduce(lambda x, y: pd.merge(x, y, on = ['name','phase_id_norm']), df_sv_list)
-
-df_merge = pd.merge(df_bp_counts, df_sv_counts, on=['name','phase_id_norm'])
+	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
+	# GET INFO FROM VCF FILES                                                                #
+	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
 
 
-## CREATE FINAL SUMMARY OUTPUT
 
-sv_list = list(set(df_merge['name']))
+	## OPEN VCF FILES
 
-general_cols = ['name','bp_name','phase_id_norm']
-all_cols = df_merge.columns
+	vcf_reader_norm = vcf.Reader(filename=vcf_norm_input)
+	norm_smpl = vcf_reader_norm.samples[0]
+	vcf_data_norm = []
 
-df_sub_list = []
+	vcf_reader_tum = vcf.Reader(filename=vcf_tum_input)
+	tum_smpl = vcf_reader_tum.samples[0]
+	vcf_data_tum = []
 
-for sv in sv_list:
-    df_sub_name = sv + "_bc_counts_sub"
-    df_sub = df_merge.loc[df_merge['name']==sv]
-    sv_cols = [c for c in all_cols if c.split("_")[0]==sv]
-    sub_cols = general_cols + sv_cols
-    df_sub = df_sub[sub_cols]
-    df_sub_cols = general_cols + ['_'.join(n.split("_")[1:]) for n in sv_cols]
-    df_sub.columns = df_sub_cols
 
-    df_sub_list.append(df_sub)
+	## OBTAIN SNVs + INFO FROM NORMAL VCF FILE -- will use normal file to define phase blocks + phase of variants 
 
-summ_df = pd.concat(df_sub_list)
-summ_df = summ_df[['name', 'bp_name', 'phase_id_norm', 'hap1_overlap_bcs_bp', 'hap2_overlap_bcs_bp', 'hap1_overlap_count_bp', 'hap2_overlap_count_bp', 'hap1_overlap_bcs_sv', 'hap2_overlap_bcs_sv', 'hap1_overlap_count_sv', 'hap2_overlap_count_sv','both_overlap_count_bp']]
+	for (name,name_1,chrom_1,start_1,end_1,name_2,chrom_2,start_2,end_2) in sv_wndw:
+	    name,name_1,chrom_1,name_2,chrom_2 = str(name),str(name_1),str(chrom_1),str(name_2),str(chrom_2)
+	    start_1,end_1,start_2,end_2 = int(start_1),int(end_1),int(start_2),int(end_2)
 
-summ_df.to_csv(outpre + ".sv_haps.txt", sep="\t", index=False)
+	    vcf_info_norm(name,name_1,chrom_1,start_1,end_1,vcf_data_norm)
+	    vcf_info_norm(name,name_2,chrom_2,start_2,end_2,vcf_data_norm)
+
+
+	## OBTAIN SNVs + INFO FROM TUMOR VCF FILE -- will use tumor file to obtain barcodes of phased variants
+
+	    vcf_info_tum(name,name_1,chrom_1,start_1,end_1,vcf_data_tum)
+	    vcf_info_tum(name,name_2,chrom_2,start_2,end_2,vcf_data_tum)
+
+
+	## MERGE VCF INFO DATA FRAMES THEN ADJUST BARCODE COLUMN ORDER TO REFLECT HAPLOTYPES
+
+	df_norm = pd.DataFrame(vcf_data_norm)
+	df_norm.columns = ['name','bp_name','phase_id_norm','chr','pos','ref_norm','alt_norm','gt_norm']
+
+	df_tum = pd.DataFrame(vcf_data_tum)
+	df_tum.columns = ['name','bp_name','phase_id_tum','chr','pos','ref_tum','alt_tum','gt_tum', 'bc_1', 'bc_2']
+
+	vcf_merge = pd.merge(df_norm, df_tum, on=['name','bp_name','chr','pos'], how="inner")
+
+	vcf_merge['bc_1_phased'] = vcf_merge.apply(lambda row: row['bc_1'] if row['gt_norm']=='0|1' else row['bc_2'], axis=1)
+	vcf_merge['bc_2_phased'] = vcf_merge.apply(lambda row: row['bc_1'] if row['gt_norm']=='1|0' else row['bc_2'], axis=1)
+
+
+	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
+	# Overlap SV-specific barcodes with barcodes of phased SNVs                   #
+	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
+
+	## CREATE A LIST OF HAPLOTYPE-SPECIFIC BARCODES FOR EACH PHASED VARIANT 
+
+	bc_1_list = vcf_merge['bc_1_phased'].tolist()
+	bc_1_list_mod = []
+	for bc_ls in bc_1_list:
+	    new_bc_ls = bc_ls.split(';')
+	    new_bc_ls_mod = [b.split('_')[0] for b in new_bc_ls]
+	    bc_1_list_mod.append(new_bc_ls_mod)
+
+	bc_2_list = vcf_merge['bc_2_phased'].tolist()
+	bc_2_list_mod = []
+	for bc_ls in bc_2_list:
+	    new_bc_ls = bc_ls.split(';')
+	    new_bc_ls_mod = [b.split('_')[0] for b in new_bc_ls]
+	    bc_2_list_mod.append(new_bc_ls_mod)
+
+	## INTERSECT "SV-SPECIFIC" BARCODES WITH LIST OF BCS FOR EACH PHASED VARIANT (GENERATED ABOVE) -- COUNT NUMBER OF OVERLAPPING BARCODES
+
+	for index, row in df_isect.iterrows():    
+
+	    sv_bcs = row['bc_overlap_id']
+	    sv_id = row['name']
+
+	    overlap_bcs_1 = []
+	    overlap_counts_1 = []
+	    for b in bc_1_list_mod:
+		bc_overlap_1 = list(set(sv_bcs) & set(b))
+		num_overlaps = len(bc_overlap_1)
+		overlap_bcs_1.append(bc_overlap_1)
+		overlap_counts_1.append(num_overlaps)
+
+	    overlap_bcs_2 = []
+	    overlap_counts_2 = []
+	    for b in bc_2_list_mod:
+		bc_overlap_2 = list(set(sv_bcs) & set(b))
+		num_overlaps = len(bc_overlap_2)
+		overlap_bcs_2.append(bc_overlap_2)
+		overlap_counts_2.append(num_overlaps)
+
+	    vcf_merge[str(sv_id) + "_hap1_overlap_count"] = overlap_counts_1
+	    vcf_merge[str(sv_id) + "_hap2_overlap_count"] = overlap_counts_2
+
+	    vcf_merge[str(sv_id) + "_hap1_overlap_bcs"] = overlap_bcs_1
+	    vcf_merge[str(sv_id) + "_hap2_overlap_bcs"] = overlap_bcs_2
+
+
+	## ADD COUNTS OF UNIQUE BARCODES FOR EACH BREAKPOINT
+
+	bp_list = list(set(vcf_merge['bp_name']))
+	sv_list = list(set(vcf_merge['name']))
+
+	df_bp_list = []
+
+	for sv in sv_list:
+	    df_bp_name = sv + "_bc_counts_bp"
+	    hap1_bc_col = sv + "_hap1_overlap_bcs"
+	    hap2_bc_col = sv + "_hap2_overlap_bcs"
+	    df_bp_name = vcf_merge.groupby(['name','bp_name','phase_id_norm']).agg({hap1_bc_col:'sum', hap2_bc_col: 'sum'}).reset_index()
+	    df_bp_name[sv + "_hap1_overlap_count_bp"] = df_bp_name[hap1_bc_col].apply(lambda x: len(set(x)))
+	    df_bp_name[sv + "_hap2_overlap_count_bp"] = df_bp_name[hap2_bc_col].apply(lambda x: len(set(x)))
+	    df_bp_name.rename(columns = {hap1_bc_col: sv + "_hap1_overlap_bcs_bp", hap2_bc_col: sv + "_hap2_overlap_bcs_bp"}, inplace=True)
+	    df_bp_list.append(df_bp_name)
+
+
+	df_bp_counts = reduce(lambda x, y: pd.merge(x, y, on = ['name','bp_name','phase_id_norm']), df_bp_list)
+
+
+	## ADD COUNTS OF UNIQUE BARCODES FOR EACH SV
+
+	sv_list = list(set(vcf_merge['name']))
+
+	df_sv_list = []
+
+	for sv in sv_list:
+	    df_sv_name = sv + "_bc_counts_sv"
+	    hap1_bc_col = sv + "_hap1_overlap_bcs"
+	    hap2_bc_col = sv + "_hap2_overlap_bcs"
+
+	    df_sv_name = vcf_merge.groupby(['name','phase_id_norm']).agg({hap1_bc_col:'sum', hap2_bc_col: 'sum'}).reset_index()
+
+	    df_sv_name[sv + "_hap1_overlap_count_sv"] = df_sv_name[hap1_bc_col].apply(lambda x: len(set(x)))
+	    df_sv_name[sv + "_hap2_overlap_count_sv"] = df_sv_name[hap2_bc_col].apply(lambda x: len(set(x)))
+	    df_sv_name[sv + "_both_overlap_count_bp"] = df_sv_name.apply(lambda row: len(set(row[hap1_bc_col]).intersection(set(row[hap2_bc_col]))), axis=1)
+	    df_sv_name.rename(columns = {hap1_bc_col: sv + "_hap1_overlap_bcs_sv", hap2_bc_col: sv + "_hap2_overlap_bcs_sv"}, inplace=True)
+	    df_sv_list.append(df_sv_name)
+
+	df_sv_counts = reduce(lambda x, y: pd.merge(x, y, on = ['name','phase_id_norm']), df_sv_list)
+
+	df_merge = pd.merge(df_bp_counts, df_sv_counts, on=['name','phase_id_norm'])
+
+
+	## CREATE FINAL SUMMARY OUTPUT
+
+	sv_list = list(set(df_merge['name']))
+
+	general_cols = ['name','bp_name','phase_id_norm']
+	all_cols = df_merge.columns
+
+	df_sub_list = []
+
+	for sv in sv_list:
+	    df_sub_name = sv + "_bc_counts_sub"
+	    df_sub = df_merge.loc[df_merge['name']==sv]
+	    sv_cols = [c for c in all_cols if c.split("_")[0]==sv]
+	    sub_cols = general_cols + sv_cols
+	    df_sub = df_sub[sub_cols]
+	    df_sub_cols = general_cols + ['_'.join(n.split("_")[1:]) for n in sv_cols]
+	    df_sub.columns = df_sub_cols
+
+	    df_sub_list.append(df_sub)
+
+	summ_df = pd.concat(df_sub_list)
+	summ_df = summ_df[['name', 'bp_name', 'phase_id_norm', 'hap1_overlap_bcs_bp', 'hap2_overlap_bcs_bp', 'hap1_overlap_count_bp', 'hap2_overlap_count_bp', 'hap1_overlap_bcs_sv', 'hap2_overlap_bcs_sv', 'hap1_overlap_count_sv', 'hap2_overlap_count_sv','both_overlap_count_bp']]
+
+	summ_df.to_csv(outpre + ".sv_haps.txt", sep="\t", index=False)
