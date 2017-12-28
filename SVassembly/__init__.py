@@ -8,4 +8,4 @@ from SVassembly import generate_bam2fq_script
 from generate_bam2fq_script import extract_fastq
 
 from SVassembly import sv-phasing_linkedreads
-from sv-phasing_linkedreads import bcs_count
+from sv_phasing_linkedreads import bcs_count #can't have "-" 
