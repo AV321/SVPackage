@@ -20,14 +20,14 @@ library(ggplot2)
 library(gridExtra)
 library(lattice)
 
-setwd(".")
+#setwd(".")
 
-args = commandArgs(trailingOnly=TRUE)
+#args = commandArgs(trailingOnly=TRUE)
 
 # test if there is at least one argument: if not, return an error
-if (length(args)==0) {
+"""if (length(args)==0) {
   stop("At least one argument must be supplied (SV name)", call.=FALSE)
-}
+}"""
 
 bkpt_name<-args[1]
 
