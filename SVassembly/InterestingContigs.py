@@ -1,4 +1,4 @@
-def interestingContigs(input, output):
+def interestingContigs(input, output_file):
         import pandas as pd
 
         import ast
@@ -35,5 +35,5 @@ def interestingContigs(input, output):
 
         dfInteresting = df.query('interesting == True')
         dfInteresting
-        dfInteresting.to_csv(output)
+        dfInteresting.to_csv(output_file)
 
