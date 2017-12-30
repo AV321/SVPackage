@@ -75,6 +75,32 @@ Input:
 Output:
 - *.som.lmpy.bic.genes.bedpe
 
+
+######################################################################################
+interestingContigs(input, output_file)
+  - Pulls out “interesting” contigs, i.e. those that are likely to span a structural variant.  
+map_to_genome(infile, out_folder)
+  - Maps contig coordinates to genome, should show that it maps to different places if it does indeed span an SV
+  - May possibly map to more than 1 chromosome
+extract_readsv2_0(fq_path, bcs, lanes, bc_file, out_dir)
+  - generates input for supernova de novo assembly (by getting reads associated with specified barcodes)
+extract_readsv2_1(r1, r2, i1, bcs, out_r1, out_r2, out_i1)
+  - generates input for supernova de novo assembly (by getting reads associated with specified barcodes)
+
+
+bcs_count(sv_file, bam_file, full_w_size, small_w_size)
+  - #
+filter_svs(tum_sv, norm_sv, lumpy_vcf, bic_file, gene_file, out_prefix, pad_bp, gpad_bp)
+  - #
+phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_size)
+  - #  
+   
+   
+plot(bkpt_name) #across bkpts. Not yet functional.
+  - #
+phase_haps(input_file) #Not yet functional.
+  - Assigns breakpoints to haplotypes
+
   
 
 
