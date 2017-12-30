@@ -14,4 +14,4 @@ import subprocess
 
 #OR
 args = ['R','plot_bcs_across_bkpts.R', '1']
-process = subprocess.Popen(args, stdout = sys.stdout)
+process = subprocess.Popen(args) #, stdout = sys.stdout)
