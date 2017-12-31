@@ -33,8 +33,8 @@ pd.options.mode.chained_assignment = None
 
 #global vars
 
-vcf_reader_norm
-vcf_reader_tum
+#vcf_reader_norm = NULL
+#vcf_reader_tum
 
 #################################################################
 ################                                 ################
@@ -254,11 +254,11 @@ def phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_siz
 
 	## OPEN VCF FILES
 
-	vcf_reader_norm = vcf.Reader(filename=vcf_norm_input)
+	global vcf_reader_norm = vcf.Reader(filename=vcf_norm_input)
 	norm_smpl = vcf_reader_norm.samples[0]
 	vcf_data_norm = []
 
-	vcf_reader_tum = vcf.Reader(filename=vcf_tum_input)
+	global vcf_reader_tum = vcf.Reader(filename=vcf_tum_input)
 	tum_smpl = vcf_reader_tum.samples[0]
 	vcf_data_tum = []
 
