@@ -31,6 +31,10 @@ import pysam, vcf
 
 pd.options.mode.chained_assignment = None
 
+#global vars
+
+vcf_reader_norm
+vcf_reader_tum
 
 #################################################################
 ################                                 ################
