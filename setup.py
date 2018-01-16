@@ -11,7 +11,7 @@ setup(
         dowload_url = 'https://github.com/AV321/SVassembly/archive/0.429.tar.gz',
         license = 'MIT',
         package_data = {'SVassembly': ['*.r', '*.R']},#'*.Rscript']}, #added bc of R file
-        include_package_data=True  #added bc of R file
+        #include_package_data=True  #added bc of R file
         #install_requires = ['pandas']  #need to fill this out
         #keywords
         #classifiers
