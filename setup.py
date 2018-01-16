@@ -3,12 +3,12 @@ from setuptools import setup
 setup(
         name = 'SVassembly',
         packages = ['SVassembly'],
-        version = '0.433',
+        version = '0.434',
         description = 'SV phasing pipeline',
         author = 'Hanlee Ji lab',
         author_email = 'avitko@stanford.edu',
         url = 'https://github.com/AV321/SVassembly',
-        dowload_url = 'https://github.com/AV321/SVassembly/archive/0.433.tar.gz',
+        dowload_url = 'https://github.com/AV321/SVassembly/archive/0.434.tar.gz',
         license = 'MIT',
         package_data = {'SVassembly': ['*.R']},#'*.Rscript']}, #added bc of R file
         #include_package_data=True  #added bc of R file
