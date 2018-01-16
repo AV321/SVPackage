@@ -19,11 +19,10 @@ def plot(bkpt_name):
     #subprocess.call('plot_bcs_across_bkpts.R')
     #subprocess.call(["Rscript", "plot_bcs_across_bkpts.R", "1"])#, "arg1", "arg2"])
     
-    subprocess.call(["Rscript", "SVassembly/SVassembly/plot_bcs_across_bkpts.R", "1"]
+    subprocess.call(["Rscript", "SVassembly/SVassembly/plot_bcs_across_bkpts.R", "1"])
     
     #subprocess.call("R plot_bcs_across_bkpts.R --1", shell=True)
 
     #command = 'Rscript'
     #path2script = 'plot_bcs_across_bkpts.R' #is this enough for path??
-    #args = ['1']'''
-    
+    #args = ['1']
