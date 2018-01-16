@@ -13,5 +13,8 @@ def plot(bkpt_name):
     #r.rfunc(bkpt_name)"""
 
 #OR
-    args = ['R','plot_bcs_across_bkpts.R', '1']
-    process = subprocess.Popen(args) #, stdout = sys.stdout)
+    #args = ['R','plot_bcs_across_bkpts.R', '1']
+    #process = subprocess.Popen(args) #, stdout = sys.stdout)
+    
+    #subprocess.call('plot_bcs_across_bkpts.R')
+    subprocess.call(["R", "plot_bcs_across_bkpts.R", "1"])#, "arg1", "arg2"])
