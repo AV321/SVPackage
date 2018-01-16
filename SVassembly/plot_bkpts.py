@@ -17,7 +17,9 @@ def plot(bkpt_name):
     #process = subprocess.Popen(args) #, stdout = sys.stdout)
     
     #subprocess.call('plot_bcs_across_bkpts.R')
-    subprocess.call(["Rscript", "plot_bcs_across_bkpts.R", "1"])#, "arg1", "arg2"])
+    #subprocess.call(["Rscript", "plot_bcs_across_bkpts.R", "1"])#, "arg1", "arg2"])
+    
+    subprocess.call(["Rscript", "SVassembly/SVassembly/plot_bcs_across_bkpts.R", "1"]
     
     #subprocess.call("R plot_bcs_across_bkpts.R --1", shell=True)
 
