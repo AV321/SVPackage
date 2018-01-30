@@ -5,7 +5,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import csv
 from scipy.stats import mode
-import math as m #have to install in testing environment
+import math as m 
 
 def plot_bkpts(bkpt_name):
 
@@ -14,6 +14,10 @@ def plot_bkpts(bkpt_name):
   file_hap =  bkpt_name + "_hap_bcs.txt"
   
   
+  
+  #sort barcodes by where they map (lowest coordinate to highest)
+  
+  #generating 2 figures - 1 for each breakpoint
   
   
   
