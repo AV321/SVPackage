@@ -1,3 +1,6 @@
+from SVassembly import hello_world
+from hello_world import helloworld
+
 from SVassembly import InterestingContigs
 from InterestingContigs import interestingContigs
 
