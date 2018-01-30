@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
 def helloworld():
-	return "Hello world!"
+	print("Hello world!")
 
+helloworld()
