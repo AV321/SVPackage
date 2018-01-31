@@ -3,12 +3,14 @@ from InterestingContigs import interestingContigs
 
 from SVassembly import get_shared
 from get_shared import get_shared_bcs
+#from get_shared import get_barcodes
 
 from SVassembly import hap_svs
 from hap_svs import assign_sv_haps
 
 from SVassembly import parse_bedpe
 from parse_bedpe import bed_to_window
+from parse_bedpe import make_window
 
 from SVassembly import plotting
 from plotting import map_to_genome

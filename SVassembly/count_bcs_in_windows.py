@@ -94,6 +94,7 @@ def make_window(s,e,w):
 	new_start = s - adj_val
 	new_end = e + adj_val
 	return [new_start,new_end]
+"""
 
 ## DEFINE FUNCTION TO OBTAIN BARCODES FROM BAM FILE FOR SPECIFIC REGIONS
 
@@ -105,7 +106,7 @@ def get_barcode_ids(bam_in, chrom, start, end, min_mapq, perf_cigar):
 			  bc_id=r.get_tag("BX")
 			  bcs.append(bc_id)
 	return list(bcs)
-"""
+
 
 def bcs_count(sv_in, bam_file, full_w_size, small_w_size):
 	full_w_size = int(full_w_size)  # -l #500000
