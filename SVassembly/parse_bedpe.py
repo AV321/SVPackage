@@ -37,7 +37,15 @@ def window_rows(r,w):
 
 ## READ IN SV FILE + PARSE TO DESIRED FORMAT
 
-def bedpe2window(sv_input,window_size=100000,outpre="out"):
+#def bedpe2window(sv_input,window_size=100000,outpre="out"):
+def bedpe2window(**kwargs):
+	
+	self.sv_input = kwargs.get('bedpe')
+	self.window_size = kwargs.get('window', 100000)
+	self.outpre = kwargs.get('out', "out")
+	
+	print self.window_size
+
 	print window_size
 	df_sv = pd.read_table(sv_input, sep="\t", comment="#", header=None)
 	df_sv.columns = ['chrom1','start1','stop1','chrom2','start2','stop2','name'] + list(df_sv.columns)[7:] 
