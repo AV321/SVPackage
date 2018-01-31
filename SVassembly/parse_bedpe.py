@@ -49,15 +49,13 @@ def bed_to_window(sv_input,window_size):
 	df_sv = df_sv[['name','name1','chrom1','start1','stop1','name2','chrom2','start2','stop2']]
 
 	sv_wndw = df_sv.apply(lambda row: window_rows(row,window_size), axis=1)
-	print sv_wndw
 	df_wndw = pd.DataFrame(list(sv_wndw))
-	print df_wndw
 	df_wndw.columns = ['name','chrom1','start1','stop1','chrom2','start2','stop2','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']
-	print df_wndw
 
 	# Check whether breakpoints are far from each other
 	df_wndw['dist'] = df_wndw.apply(lambda row: get_dist(row)[0], axis=1)
 	df_wndw['status'] = df_wndw.apply(lambda row: get_dist(row)[1], axis=1)
 	print df_wndw
+	return df_wndw
 
 	df_wndw.to_csv(os.path.splitext(sv_input)[0] + ".wndw.txt", sep="\t", index=False)
