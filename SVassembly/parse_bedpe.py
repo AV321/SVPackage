@@ -38,7 +38,7 @@ def window_rows(r,w):
 ## READ IN SV FILE + PARSE TO DESIRED FORMAT
 
 #def bedpe2window(sv_input,window_size=100000,outpre="out"):
-def bedpe2window(**kwargs):
+def bedpe2window(window_size=100000,outpre='out',**kwargs):
 	
 	sv_input = kwargs['bedpe']
 	window_size = kwargs['window']
