@@ -40,11 +40,16 @@ def window_rows(r,w):
 #def bedpe2window(sv_input,window_size=100000,outpre="out"):
 def bedpe2window(window_size=100000,outpre='out',**kwargs):
 	
-	sv_input = kwargs['bedpe']
-	window_size = kwargs['window']
-	outpre = kwargs['out']
+	if 'bedpe' in kwargs:
+		sv_input = kwargs['bedpe']
+	if 'window' in kwargs:
+		window_size = kwargs['window']
+	if 'out' in kwargs:
+		outpre = kwargs['out']
 	
+	print sv_input
 	print window_size
+	print outpre
 
 	df_sv = pd.read_table(sv_input, sep="\t", comment="#", header=None)
 	df_sv.columns = ['chrom1','start1','stop1','chrom2','start2','stop2','name'] + list(df_sv.columns)[7:] 
