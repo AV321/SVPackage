@@ -90,22 +90,6 @@ outpre = args.out_in #-out"""
 # Parse SV input file to desired format                                       #
 #+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
 
-
-## DEFINE FUNCTIONS TO CREATE WINDOWS AROUND BREAKPOINTS
-
-def make_window(s,e,w):
-    cur_size = e-s
-    adj_val = (w-cur_size)/2
-    adj_val = int(round(adj_val,0))
-    new_start = s - adj_val
-    new_end = e + adj_val
-    return [new_start,new_end]
-
-def window_rows(r,w):
-    wndw_row = [ r['name'],r['chrom1'],r['start1'],r['stop1'],r['chrom2'],r['start2'],r['stop2'],r['name1'],r['chrom1']] + make_window(r['start1'],r['stop1'],w) + [r['name2'],r['chrom2']] + make_window(r['start2'],r['stop2'],w)
-    return wndw_row
-
-
 ### DEFINE FUNCTIONS TO PARSE VCF FILES
 
 def vcf_info_norm(n,bn,c,s,e,olist):
@@ -138,7 +122,7 @@ def get_barcodes(bam_in, chrom, start, end, min_mapq, perf_cigar):
                     bcs.add(bc_id)
         return list(bcs)		
 		
-## READ IN SV FILE + PARSE TO DESIRED FORMAT
+## READ IN SV DF + PARSE TO DESIRED FORMAT
 
 #" -vnorm longranger_normal.vcf.gz 
 #-vtum longranger_tumor.vcf.gz 
@@ -148,22 +132,9 @@ def get_barcodes(bam_in, chrom, start, end, min_mapq, perf_cigar):
 #-w window_size"
 
 def phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_size):
-	df_sv = pd.read_table(sv_input, sep="\t")
+	df_sv = sv_input
 	df_sv = df_sv.rename(columns = {'#chrom1':'chrom1'})
-
-	df_sv['name1'] = df_sv['name'].apply(lambda x: str(x) + "_1")
-	df_sv['name2'] = df_sv['name'].apply(lambda x: str(x) + "_2")
-
-	df_sv = df_sv[['name','name1','chrom1','start1','stop1','name2','chrom2','start2','stop2']]
-
-
-	## CREATE A DATA FRAME OF BREAKPOINTS WHERE WINDOW IS 100KB, THEN TURN DF INTO LIST OF LISTS
-	sv_wndw = df_sv.apply(lambda row: window_rows(row,window_size), axis=1)
-	df_wndw = pd.DataFrame(list(sv_wndw))
-	df_wndw.columns = ['name','chrom1','start1','stop1','chrom2','start2','stop2','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']
-
-	## Generate list of columns to loop through
-	sv_wndw = df_wndw[['name','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']].values.tolist()
+	sv_wndw = df_sv[['name','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']].values.tolist()
 
 
 	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
@@ -416,3 +387,5 @@ def phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_siz
 	summ_df = summ_df[['name', 'bp_name', 'phase_id_norm', 'hap1_overlap_bcs_bp', 'hap2_overlap_bcs_bp', 'hap1_overlap_count_bp', 'hap2_overlap_count_bp', 'hap1_overlap_bcs_sv', 'hap2_overlap_bcs_sv', 'hap1_overlap_count_sv', 'hap2_overlap_count_sv','both_overlap_count_bp']]
 
 	summ_df.to_csv(outpre + ".sv_haps.txt", sep="\t", index=False)
+	
+	return summ_df
