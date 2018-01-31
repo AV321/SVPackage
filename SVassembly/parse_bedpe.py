@@ -40,9 +40,9 @@ def window_rows(r,w):
 #def bedpe2window(sv_input,window_size=100000,outpre="out"):
 def bedpe2window(**kwargs):
 	
-	self.sv_input = kwargs.get('bedpe')
-	self.window_size = kwargs.get('window', 100000)
-	self.outpre = kwargs.get('out', "out")
+	sv_input = kwargs['bedpe']
+	window_size = kwargs['window']
+	outpre = kwargs['out']
 	
 	print self.window_size
 
