@@ -217,7 +217,7 @@ def phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_siz
 	#print df_merge
 
 	df_isect.to_csv(outpre + ".sv_bcs.txt", sep="\t", index=False)
-
+	return df_isect
 
 	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
 	# GET INFO FROM VCF FILES                                                                #
@@ -389,4 +389,4 @@ def phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_siz
 	summ_df = summ_df[['name', 'bp_name', 'phase_id_norm', 'hap1_overlap_bcs_bp', 'hap2_overlap_bcs_bp', 'hap1_overlap_count_bp', 'hap2_overlap_count_bp', 'hap1_overlap_bcs_sv', 'hap2_overlap_bcs_sv', 'hap1_overlap_count_sv', 'hap2_overlap_count_sv','both_overlap_count_bp']]
 
 	summ_df.to_csv(outpre + ".sv_haps.txt", sep="\t", index=False)
-	return summ_df
+
