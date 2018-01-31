@@ -9,7 +9,7 @@ from SVassembly import hap_svs
 from hap_svs import assign_sv_haps
 
 from SVassembly import parse_bedpe
-from parse_bedpe import bed_to_window,make_window
+from parse_bedpe import bed_to_window
 
 from SVassembly import plotting
 from plotting import map_to_genome

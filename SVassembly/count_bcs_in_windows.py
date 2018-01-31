@@ -86,7 +86,7 @@ small_w_size = int(args.count_wndw_in) # -w #1000"""
 
 
 ## DEFINE FUNCTION TO CREATE WINDOWS AROUND BREAKPOINTS
-"""
+
 def make_window(s,e,w):
 	cur_size = e-s
 	adj_val = (w-cur_size)/2
@@ -94,7 +94,6 @@ def make_window(s,e,w):
 	new_start = s - adj_val
 	new_end = e + adj_val
 	return [new_start,new_end]
-"""
 
 ## DEFINE FUNCTION TO OBTAIN BARCODES FROM BAM FILE FOR SPECIFIC REGIONS
 
