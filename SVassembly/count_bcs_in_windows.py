@@ -160,4 +160,5 @@ def bcs_count(sv_in, bam_file, full_w_size, small_w_size):
 		cur_name = str(row['name'])
 		df.to_csv(cur_name + ".bc_windows.txt", sep="\t", index=False)
 
+		return df
 
