@@ -44,9 +44,8 @@ def bedpe2window(**kwargs):
 	window_size = kwargs['window']
 	outpre = kwargs['out']
 	
-	print self.window_size
-
 	print window_size
+
 	df_sv = pd.read_table(sv_input, sep="\t", comment="#", header=None)
 	df_sv.columns = ['chrom1','start1','stop1','chrom2','start2','stop2','name'] + list(df_sv.columns)[7:] 
 
