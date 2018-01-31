@@ -86,7 +86,7 @@ small_w_size = int(args.count_wndw_in) # -w #1000"""
 
 
 ## DEFINE FUNCTION TO CREATE WINDOWS AROUND BREAKPOINTS
-
+"""
 def make_window(s,e,w):
 	cur_size = e-s
 	adj_val = (w-cur_size)/2
@@ -105,7 +105,7 @@ def get_barcode_ids(bam_in, chrom, start, end, min_mapq, perf_cigar):
 			  bc_id=r.get_tag("BX")
 			  bcs.append(bc_id)
 	return list(bcs)
-
+"""
 
 def bcs_count(sv_in, bam_file, full_w_size, small_w_size):
 	full_w_size = int(full_w_size)  # -l #500000
