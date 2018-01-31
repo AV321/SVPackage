@@ -20,7 +20,16 @@ def get_barcodes(bam_in, chrom, start, end, min_mapq, perf_cigar):
         return list(bcs)
 
 
-def get_shared_bcs(sv_input, bam_input, outpre):
+#def get_shared_bcs(sv_input, bam_input, outpre):
+def get_shared_bcs(outpre='out',**kwargs):
+	
+	if 'sv' in kwargs:
+		sv_input = kwargs['sv']
+	if 'bam' in kwargs:
+		bam_input = kwargs['bam']
+	if 'out' in kwargs:
+		outpre = kwargs['out']
+
 	df_sv = sv_input
 	#df_sv = df_sv.rename(columns = {'#chrom1':'chrom1'})
 

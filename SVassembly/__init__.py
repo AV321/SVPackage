@@ -1,15 +1,14 @@
 from SVassembly import InterestingContigs
 from InterestingContigs import interestingContigs
 
-from SVassembly import get_shared
-from get_shared import get_shared_bcs
-#from get_shared import get_barcodes
+from SVassembly import bedpe2window_f
+from bedpe2window_f import bedpe2window
+
+from SVassembly import get_shared_bcs_f
+from get_shared_bcs_f import get_shared_bcs
 
 from SVassembly import hap_svs
 from hap_svs import assign_sv_haps
-
-from SVassembly import parse_bedpe
-from parse_bedpe import bedpe2window
 
 from SVassembly import plotting
 from plotting import map_to_genome
