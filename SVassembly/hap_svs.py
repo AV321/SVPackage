@@ -170,32 +170,6 @@ def assign_sv_haps(vcf_norm_input, vcf_tum_input, sv_input, outpre):
 
 	df_bp_counts = reduce(lambda x, y: pd.merge(x, y, on = ['name','bp_name','phase_id_norm']), df_bp_list)
 
-
-"""
-	## ADD COUNTS OF UNIQUE BARCODES FOR EACH SV
-
-	sv_list = list(set(vcf_merge['name']))
-
-	df_sv_list = []
-
-	for sv in sv_list:
-	    df_sv_name = sv + "_bc_counts_sv"
-	    hap1_bc_col = sv + "_hap1_overlap_bcs"
-	    hap2_bc_col = sv + "_hap2_overlap_bcs"
-
-	    df_sv_name = vcf_merge.groupby(['name','phase_id_norm']).agg({hap1_bc_col:'sum', hap2_bc_col: 'sum'}).reset_index()
-
-	    df_sv_name[sv + "_hap1_overlap_count_sv"] = df_sv_name[hap1_bc_col].apply(lambda x: len(set(x)))
-	    df_sv_name[sv + "_hap2_overlap_count_sv"] = df_sv_name[hap2_bc_col].apply(lambda x: len(set(x)))
-	    df_sv_name[sv + "_both_overlap_count_bp"] = df_sv_name.apply(lambda row: len(set(row[hap1_bc_col]).intersection(set(row[hap2_bc_col]))), axis=1)
-	    df_sv_name.rename(columns = {hap1_bc_col: sv + "_hap1_overlap_bcs_sv", hap2_bc_col: sv + "_hap2_overlap_bcs_sv"}, inplace=True)
-	    df_sv_list.append(df_sv_name)
-
-	df_sv_counts = reduce(lambda x, y: pd.merge(x, y, on = ['name','phase_id_norm']), df_sv_list)
-
-	df_merge = pd.merge(df_bp_counts, df_sv_counts, on=['name','phase_id_norm'])
-"""
-
 	## CREATE FINAL SUMMARY OUTPUT
 
 	sv_list = list(set(df_bp_counts['name']))
