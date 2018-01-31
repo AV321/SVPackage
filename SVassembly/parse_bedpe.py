@@ -56,6 +56,6 @@ def bed_to_window(sv_input,window_size):
 	df_wndw['dist'] = df_wndw.apply(lambda row: get_dist(row)[0], axis=1)
 	df_wndw['status'] = df_wndw.apply(lambda row: get_dist(row)[1], axis=1)
 	print df_wndw
-	return df_wndw
 
 	df_wndw.to_csv(os.path.splitext(sv_input)[0] + ".wndw.txt", sep="\t", index=False)
+	return df_wndw
