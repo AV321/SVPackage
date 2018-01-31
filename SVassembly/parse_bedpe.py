@@ -4,8 +4,8 @@ import os, sys, argparse, __main__ as main
 import pandas as pd, numpy as np
 import pysam, vcf
 
-sv_input = sys.argv[1] 
-window_size = int(sys.argv[2])
+"""sv_input = sys.argv[1]
+window_size = int(sys.argv[2])"""
 
 ## DEFINE FUNCTIONS TO CREATE WINDOWS AROUND BREAKPOINTS
 
@@ -23,7 +23,6 @@ def get_dist(r):
 			status="pass"
 		else:
 			status="fail"
-	
 	return [dist,status]
 
 def make_window(s,e,w):
@@ -40,24 +39,25 @@ def window_rows(r,w):
 
 ## READ IN SV FILE + PARSE TO DESIRED FORMAT
 
-df_sv = pd.read_table(sv_input, sep="\t", comment="#", header=None)
-df_sv.columns = ['chrom1','start1','stop1','chrom2','start2','stop2','name'] + list(df_sv.columns)[7:] 
+def bed_to_window(sv_input,window_size):
+	df_sv = pd.read_table(sv_input, sep="\t", comment="#", header=None)
+	df_sv.columns = ['chrom1','start1','stop1','chrom2','start2','stop2','name'] + list(df_sv.columns)[7:] 
 
-df_sv['name1'] = df_sv['name'].apply(lambda x: str(x) + "_1")
-df_sv['name2'] = df_sv['name'].apply(lambda x: str(x) + "_2")
+	df_sv['name1'] = df_sv['name'].apply(lambda x: str(x) + "_1")
+	df_sv['name2'] = df_sv['name'].apply(lambda x: str(x) + "_2")
 
-df_sv = df_sv[['name','name1','chrom1','start1','stop1','name2','chrom2','start2','stop2']]
+	df_sv = df_sv[['name','name1','chrom1','start1','stop1','name2','chrom2','start2','stop2']]
 
-sv_wndw = df_sv.apply(lambda row: window_rows(row,window_size), axis=1)
-print sv_wndw
-df_wndw = pd.DataFrame(list(sv_wndw))
-print df_wndw
-df_wndw.columns = ['name','chrom1','start1','stop1','chrom2','start2','stop2','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']
-print df_wndw
+	sv_wndw = df_sv.apply(lambda row: window_rows(row,window_size), axis=1)
+	print sv_wndw
+	df_wndw = pd.DataFrame(list(sv_wndw))
+	print df_wndw
+	df_wndw.columns = ['name','chrom1','start1','stop1','chrom2','start2','stop2','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']
+	print df_wndw
 
-# Check whether breakpoints are far from each other
-df_wndw['dist'] = df_wndw.apply(lambda row: get_dist(row)[0], axis=1)
-df_wndw['status'] = df_wndw.apply(lambda row: get_dist(row)[1], axis=1)
-print df_wndw
+	# Check whether breakpoints are far from each other
+	df_wndw['dist'] = df_wndw.apply(lambda row: get_dist(row)[0], axis=1)
+	df_wndw['status'] = df_wndw.apply(lambda row: get_dist(row)[1], axis=1)
+	print df_wndw
 
-df_wndw.to_csv(os.path.splitext(sv_input)[0] + ".wndw.txt", sep="\t", index=False)
+	df_wndw.to_csv(os.path.splitext(sv_input)[0] + ".wndw.txt", sep="\t", index=False)

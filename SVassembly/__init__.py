@@ -1,8 +1,8 @@
-from SVassembly import hello_world
-from hello_world import helloworld
-
 from SVassembly import InterestingContigs
 from InterestingContigs import interestingContigs
+
+from SVassembly import parse_bedpe
+from parse_bedpe import bed_to_window
 
 from SVassembly import plotting
 from plotting import map_to_genome
