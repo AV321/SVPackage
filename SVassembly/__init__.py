@@ -1,6 +1,9 @@
 from SVassembly import InterestingContigs
 from InterestingContigs import interestingContigs
 
+from SVassembly import get_shared
+from get_shared import get_shared_bcs
+
 from SVassembly import parse_bedpe
 from parse_bedpe import bed_to_window
 
