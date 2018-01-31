@@ -122,7 +122,7 @@ def assign_sv_haps(vcf_norm_input, vcf_tum_input, sv_input, outpre):
 
 	## INTERSECT "SV-SPECIFIC" BARCODES WITH LIST OF BCS FOR EACH PHASED VARIANT (GENERATED ABOVE) -- COUNT NUMBER OF OVERLAPPING BARCODES
 
-	for index, row in df_isect.iterrows():    
+	for index, row in df_sv.iterrows():    
 
 	    sv_bcs = row['bc_overlap_id']
 	    sv_id = row['name']
