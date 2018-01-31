@@ -171,6 +171,7 @@ def assign_sv_haps(vcf_norm_input, vcf_tum_input, sv_input, outpre):
 	df_bp_counts = reduce(lambda x, y: pd.merge(x, y, on = ['name','bp_name','phase_id_norm']), df_bp_list)
 
 
+"""
 	## ADD COUNTS OF UNIQUE BARCODES FOR EACH SV
 
 	sv_list = list(set(vcf_merge['name']))
@@ -193,20 +194,20 @@ def assign_sv_haps(vcf_norm_input, vcf_tum_input, sv_input, outpre):
 	df_sv_counts = reduce(lambda x, y: pd.merge(x, y, on = ['name','phase_id_norm']), df_sv_list)
 
 	df_merge = pd.merge(df_bp_counts, df_sv_counts, on=['name','phase_id_norm'])
-
+"""
 
 	## CREATE FINAL SUMMARY OUTPUT
 
-	sv_list = list(set(df_merge['name']))
+	sv_list = list(set(df_bp_counts['name']))
 
 	general_cols = ['name','bp_name','phase_id_norm']
-	all_cols = df_merge.columns
+	all_cols = df_bp_counts.columns
 
 	df_sub_list = []
 
 	for sv in sv_list:
 	    df_sub_name = sv + "_bc_counts_sub"
-	    df_sub = df_merge.loc[df_merge['name']==sv]
+	    df_sub = df_bp_counts.loc[df_bp_counts['name']==sv]
 	    sv_cols = [c for c in all_cols if c.split("_")[0]==sv]
 	    sub_cols = general_cols + sv_cols
 	    df_sub = df_sub[sub_cols]
@@ -216,7 +217,8 @@ def assign_sv_haps(vcf_norm_input, vcf_tum_input, sv_input, outpre):
 	    df_sub_list.append(df_sub)
 
 	summ_df = pd.concat(df_sub_list)
-	summ_df = summ_df[['name', 'bp_name', 'phase_id_norm', 'hap1_overlap_bcs_bp', 'hap2_overlap_bcs_bp', 'hap1_overlap_count_bp', 'hap2_overlap_count_bp', 'hap1_overlap_bcs_sv', 'hap2_overlap_bcs_sv', 'hap1_overlap_count_sv', 'hap2_overlap_count_sv','both_overlap_count_bp']]
+	#summ_df = summ_df[['name', 'bp_name', 'phase_id_norm', 'hap1_overlap_bcs_bp', 'hap2_overlap_bcs_bp', 'hap1_overlap_count_bp', 'hap2_overlap_count_bp', 'hap1_overlap_bcs_sv', 'hap2_overlap_bcs_sv', 'hap1_overlap_count_sv', 'hap2_overlap_count_sv','both_overlap_count_bp']]
+	summ_df = summ_df[['name', 'bp_name', 'phase_id_norm', 'hap1_overlap_bcs_bp', 'hap2_overlap_bcs_bp', 'hap1_overlap_count_bp', 'hap2_overlap_count_bp']]
 
 	summ_df.to_csv(outpre + ".sv_haps.txt", sep="\t", index=False)
-
+	return summ_df
