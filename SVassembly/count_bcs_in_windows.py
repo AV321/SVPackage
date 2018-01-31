@@ -107,11 +107,11 @@ def get_barcode_ids(bam_in, chrom, start, end, min_mapq, perf_cigar):
 	return list(bcs)
 
 
-def bcs_count(sv_file, bam_file, full_w_size, small_w_size):
+def bcs_count(sv_in, bam_file, full_w_size, small_w_size):
 	full_w_size = int(full_w_size)  # -l #500000
 	small_w_size = int(small_w_size)
 	
-	sv_df = pd.read_table(sv_file, sep="\t")
+	sv_df = sv_in
 
 	sv_df1 = sv_df[['name1','chrom1','start1','stop1','bc_overlap_id']]
 	sv_df2 = sv_df[['name2','chrom2','start2','stop2','bc_overlap_id']]
