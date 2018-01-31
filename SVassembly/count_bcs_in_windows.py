@@ -150,7 +150,8 @@ def bcs_count(sv_in, bam_file, full_w_size, small_w_size):
 			region_bcs.append(region_bc_list)
 
 		# Make list of SV-specific barcodes
-		bc_list = ast.literal_eval(row['bc_overlap_id'])
+		bc_list = row['bc_overlap_id']
+		#bc_list = ast.literal_eval(row['bc_overlap_id'])
 
 		# For each SV-specific barcode, count the number of times it occurs in each region
 		for bc in bc_list:
