@@ -122,7 +122,7 @@ def get_barcodes(bam_in, chrom, start, end, min_mapq, perf_cigar):
                     bcs.add(bc_id)
         return list(bcs)		
 		
-## READ IN SV DF + PARSE TO DESIRED FORMAT
+## READ IN SV FILE + PARSE TO DESIRED FORMAT
 
 #" -vnorm longranger_normal.vcf.gz 
 #-vtum longranger_tumor.vcf.gz 
@@ -134,6 +134,8 @@ def get_barcodes(bam_in, chrom, start, end, min_mapq, perf_cigar):
 def phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_size):
 	df_sv = sv_input
 	df_sv = df_sv.rename(columns = {'#chrom1':'chrom1'})
+
+	## Generate list of columns to loop through
 	sv_wndw = df_sv[['name','name1','chrom1_w','start1_w','stop1_w','name2','chrom2_w','start2_w','stop2_w']].values.tolist()
 
 
@@ -180,8 +182,8 @@ def phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_siz
 
 	## CREATE TABLE CONTAINING EVENTS ALONG WITH THEIR SV-SPECIFIC BARCODES
 
-	df_wndw[['name']], df_bam[['name']] = df_wndw[['name']].astype(str), df_bam[['name']].astype(str)
-	df_bc = pd.merge(df_wndw, df_bam, on='name')
+	df_sv[['name']], df_bam[['name']] = df_sv[['name']].astype(str), df_bam[['name']].astype(str)
+	df_bc = pd.merge(df_sv, df_bam, on='name')
 
 
 	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
@@ -387,5 +389,3 @@ def phase(vcf_norm_input, vcf_tum_input, sv_input, bam_input, outpre, window_siz
 	summ_df = summ_df[['name', 'bp_name', 'phase_id_norm', 'hap1_overlap_bcs_bp', 'hap2_overlap_bcs_bp', 'hap1_overlap_count_bp', 'hap2_overlap_count_bp', 'hap1_overlap_bcs_sv', 'hap2_overlap_bcs_sv', 'hap1_overlap_count_sv', 'hap2_overlap_count_sv','both_overlap_count_bp']]
 
 	summ_df.to_csv(outpre + ".sv_haps.txt", sep="\t", index=False)
-	
-	return summ_df
