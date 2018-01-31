@@ -4,8 +4,6 @@ import os, sys, argparse, __main__ as main
 import pandas as pd, numpy as np
 import pysam, vcf
 
-"""sv_input = sys.argv[1]
-window_size = int(sys.argv[2])"""
 
 ## DEFINE FUNCTIONS TO CREATE WINDOWS AROUND BREAKPOINTS
 
@@ -39,7 +37,8 @@ def window_rows(r,w):
 
 ## READ IN SV FILE + PARSE TO DESIRED FORMAT
 
-def bed_to_window(sv_input,window_size):
+def bedpe2window(sv_input,window_size=100000,outpre="out"):
+	print window_size
 	df_sv = pd.read_table(sv_input, sep="\t", comment="#", header=None)
 	df_sv.columns = ['chrom1','start1','stop1','chrom2','start2','stop2','name'] + list(df_sv.columns)[7:] 
 
@@ -55,7 +54,6 @@ def bed_to_window(sv_input,window_size):
 	# Check whether breakpoints are far from each other
 	df_wndw['dist'] = df_wndw.apply(lambda row: get_dist(row)[0], axis=1)
 	df_wndw['status'] = df_wndw.apply(lambda row: get_dist(row)[1], axis=1)
-	print df_wndw
 
-	df_wndw.to_csv(os.path.splitext(sv_input)[0] + ".wndw.txt", sep="\t", index=False)
+	df_wndw.to_csv(str(outpre) + ".wndw.txt", sep="\t", index=False)
 	return df_wndw
