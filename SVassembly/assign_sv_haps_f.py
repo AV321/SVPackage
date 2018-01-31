@@ -43,8 +43,18 @@ def vcf_info_tum(n,bn,c,s,e,olist):
                 fields = "n, bn,record.genotype(tum_smpl)['PS'], record.CHROM, record.POS, record.REF, record.ALT, record.genotype(tum_smpl)['GT'], bc_1, bc_2"
                 olist.append(eval(fields))     
 		
-def assign_sv_haps(vcf_norm_input, vcf_tum_input, sv_input, outpre):
+#def assign_sv_haps(vcf_norm_input, vcf_tum_input, sv_input, outpre):
+def assign_sv_haps(outpre='out',**kwargs):
 
+	if 'sv' in kwargs:
+		sv_input = kwargs['sv']
+	if 'vcf_control' in kwargs:
+		vcf_norm_input = kwargs['vcf_control']
+	if 'vcf_test' in kwargs:
+		vcf_tum_input = kwargs['vcf_test']
+	if 'out' in kwargs:
+		outpre = kwargs['out']
+		
 	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#
 	# GET INFO FROM VCF FILES                                                                #
 	#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#

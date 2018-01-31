@@ -7,8 +7,8 @@ from bedpe2window_f import bedpe2window
 from SVassembly import get_shared_bcs_f
 from get_shared_bcs_f import get_shared_bcs
 
-from SVassembly import hap_svs
-from hap_svs import assign_sv_haps
+from SVassembly import assign_sv_haps_f
+from assign_sv_haps_f import assign_sv_haps
 
 from SVassembly import plotting
 from plotting import map_to_genome
