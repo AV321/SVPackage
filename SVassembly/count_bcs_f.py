@@ -83,7 +83,7 @@ def count_bcs(outpre='out',out_window=500000, in_window=1000,**kwargs):
 	if 'out' in kwargs:
 		outpre = kwargs['out']
 	
-	print sv
+	print sv_input
 	print outpre
 	print full_w_size
 	print small_w_size
