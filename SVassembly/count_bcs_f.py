@@ -71,7 +71,6 @@ def get_barcode_ids(bam_in, chrom, start, end, min_mapq, perf_cigar):
 def count_bcs(outpre='out',full_w_size=500000, small_w_size=1000,**kwargs):
 	
 	print kwargs
-	print out_window
 
 	if 'in_window' in kwargs:
 		small_w_size = kwargs['in_window']
