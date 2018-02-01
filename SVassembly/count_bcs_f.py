@@ -81,8 +81,10 @@ def count_bcs(outpre='out',out_window=500000, in_window=1000,**kwargs):
 	if 'out' in kwargs:
 		outpre = kwargs['out']
 	
-	#full_w_size = int(full_w_size)  # -l #500000
-	#small_w_size = int(small_w_size)
+	global full_w_size
+	full_w_size = int(full_w_size)  # -l #500000
+	global small_w_size
+	small_w_size = int(small_w_size)
 	
 	sv_df = sv_input
 
