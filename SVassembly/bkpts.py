@@ -8,7 +8,7 @@ from scipy.stats import mode
 import math as m 
 
 #set working directory
-os.chdir(/mnt/ix1/Projects/M002_131217_gastric/P00526/P00526_WG10_150722_gastric/A20_170516_hmw_maps/metr)
+os.chdir(mnt/ix1/Projects/M002_131217_gastric/P00526/P00526_WG10_150722_gastric/A20_170516_hmw_maps/metr)
 
 def plot_bkpts(bkpt_name):
 
