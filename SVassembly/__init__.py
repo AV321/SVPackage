@@ -13,7 +13,7 @@ from count_bcs_f import count_bcs #can't have "-"
 from SVassembly import plotting
 from plotting import map_to_genome
 
-from SVassembly import generate_bam2fq_script
+from SVassembly import extract_reads_2_0
 from generate_bam2fq_script import extract_readsv2_0  #LR v2.0
 
 from SVassembly import extract_reads_by_barcode_fastq_noninterleaved
