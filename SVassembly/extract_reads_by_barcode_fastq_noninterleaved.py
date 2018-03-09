@@ -2,8 +2,6 @@
 
 import csv
 import pysam
-#import argparse
-#from numba import jit
 #import distance
 #import editdistance
 from itertools import izip_longest, islice
@@ -40,24 +38,6 @@ def takeClosest(myList, myNumber):
 	   
 #http://stackoverflow.com/questions/6335839/python-how-to-read-n-number-of-lines-at-a-time
 
-"""@jit
-def grouper(iterable, n, fillvalue=None):
-    "grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
-    args = [iter(iterable)] * n
-    return izip_longest(*args, fillvalue=fillvalue)""" #don't end up using this
-
-"""def parse_commandline():
-	parser=argparse.ArgumentParser()
-	parser.add_argument('--r1', help='10X R1 fastq.gz file',required=True)
-	parser.add_argument('--r2', help='10X R2 fastq.gz file',required=True)
-	parser.add_argument('--i1', help='10X I1 fastq.gz file',required=True)
-	parser.add_argument('--bcs', help='barcode list',required=True)
-	parser.add_argument('--out_r1', help='output R1 fastq.gz file', required=True)
-	parser.add_argument('--out_r2', help='output R2 fastq.gz file', required=True)
-	parser.add_argument('--out_i1', help='output I1 fastq file', required=True)
-
-	args=parser.parse_args()
-	return args"""
 
 def extract_readsv2_1(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
 		   
@@ -104,6 +84,3 @@ def extract_readsv2_1(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
 					out_si_file.write(line)
 				
 
-"""if __name__ == '__main__':
-        args=parse_commandline()
-        main(args)"""
