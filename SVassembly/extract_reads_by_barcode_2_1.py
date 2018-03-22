@@ -8,6 +8,8 @@ from itertools import izip_longest, islice
 import gzip
 import sys
 import time
+
+import io
 #from bisect import bisect_left
 
 """def calcmin(x_num,x_list):
@@ -56,7 +58,7 @@ def extract_readsv2_1(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
 	n = 0
 	i = 0
 
-	with gzip.open(r1, 'r') as f1, gzip.open(r2, 'r') as f2, gzip.open(i1,'r') as ind:
+	with io.BufferedReader(gzip.open(r1, 'r')) as f1, io.BufferedReader(gzip.open(r2, 'r') as f2, gzip.open(i1,'r')) as ind:
 		cur_time = time.time()
 		#don't use grouper -- it's slow
 		#for (lines,lines_index) in zip(grouper(f, 8, ""),grouper(ind,8,"")):
