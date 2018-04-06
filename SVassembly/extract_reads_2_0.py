@@ -116,6 +116,7 @@ import io
 
 def extract_readsv2_0(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
         
+        start_time = time.time()
         #"/mnt/ix1/Seq_Runs/20160122_CC3_0317/Analysis/fastq"
         #"ACGACGCT,CGCCATTC,GTAGTCAG,TATTGAGA"
         #"1,5"
@@ -151,7 +152,10 @@ def extract_readsv2_0(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
 
 
                         extract_reads(cmd_list)
-
+                     
+        end_time = time.time()
+        total_time = end_time - start_time
+        print >>sys.stderr, "Total run time was %d" % (total_time)
 
 def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be main
 
