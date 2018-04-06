@@ -41,7 +41,7 @@ def takeClosest(myList, myNumber):
 #http://stackoverflow.com/questions/6335839/python-how-to-read-n-number-of-lines-at-a-time
 
 
-def extract_readsv2_1(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
+def extract_readsv2_1_new(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
 	
 	start_time = time.time()
 	
