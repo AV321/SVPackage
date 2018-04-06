@@ -42,7 +42,9 @@ def takeClosest(myList, myNumber):
 
 
 def extract_readsv2_1(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
-		   
+	
+	start_time = time.time()
+	
 	bcs_list = []
 	out_r1_file = gzip.open(out_r1,'w')
 	out_r2_file = gzip.open(out_r2,'w')
@@ -85,4 +87,6 @@ def extract_readsv2_1(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
 				for line in lines_index:
 					out_si_file.write(line)
 				
-
+	end_time = time.time()
+        total_time = end_time - start_time
+        print >>sys.stderr, "Total run time was %d" % (total_time)
