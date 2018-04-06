@@ -114,7 +114,7 @@ import time
 
 import io
 
-def extract_readsv2_0(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
+def extract_readsv2_0_new(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
         
         start_time = time.time()
         #"/mnt/ix1/Seq_Runs/20160122_CC3_0317/Analysis/fastq"
