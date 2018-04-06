@@ -191,14 +191,14 @@ def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be 
                     if lines:
 
                         n += 1
-                        if (n % 100000 == 0): 
+                        if (n % 1000000 == 0): 
                             #out_file.write('\n'.join(lines_list))
                             #out_si_file.write('\n'.join(ind_list))
 
                             #lines_list = []
                             #ind_list = []
 
-                            print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time()*1000 - cur_time*1000)
+                            print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
                             cur_time = time.time()
 
 
