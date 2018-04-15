@@ -65,7 +65,7 @@ def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be 
         out_si_file = gzip.open(args_fq[4],'w')  
 
         with open(args_fq[2],'r') as f:
-            bcs = [line[0] for line in csv.reader(f,delimiter='\t')]
+                bcs = [line[0] for line in csv.reader(f,delimiter='\t')]
 
 
         bcs = set(bcs)
@@ -82,35 +82,37 @@ def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be 
                 
                 while True: #create exit condition to break loop -- sth like if not lines
                    
-                    lines = list(islice(f,8)) 
-                    lines_index = list(islice(ind,4))
+                        lines = list(islice(f,8)) 
+                        lines_index = list(islice(ind,4))
 
-                    if lines:
+                        if not lines:
+                                break 
+                    
 
                         n += 1
                         if (n % 1000000 == 0): 
-                            #out_file.write('\n'.join(lines_list))
-                            #out_si_file.write('\n'.join(ind_list))
+                                #out_file.write('\n'.join(lines_list))
+                                #out_si_file.write('\n'.join(ind_list))
 
-                            #lines_list = []
-                            #ind_list = []
+                                #lines_list = []
+                                #ind_list = []
 
-                            print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
-                            cur_time = time.time()
+                                print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
+                                cur_time = time.time()
 
 
 
                         if (lines[1][0:16] in bcs): #TAKING ALL OF THIS OUT DOESN'T AFFECT SPEED
-                            i += 1
+                                i += 1
 
-                            #print len(lines)
-                            for line in lines: #make this more pythonic
-                                    out_file.write(line)
-                                    #lines_list.append(line)
+                                #print len(lines)
+                                for line in lines: #make this more pythonic
+                                        out_file.write(line)
+                                        #lines_list.append(line)
 
-                            for line in lines_index: #make this more pythonic
-                                    out_si_file.write(line)
-                                    #ind_list.append(line)
+                                for line in lines_index: #make this more pythonic
+                                        out_si_file.write(line)
+                                        #ind_list.append(line)
 
 
                        
