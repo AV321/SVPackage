@@ -100,7 +100,7 @@ def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be 
                                 cur_time = time.time()
 
                         if (lines[1][0:16] in bcs): #TAKING ALL OF THIS OUT DOESN'T AFFECT SPEED
-                        i += 1
+                                i += 1
 
                         for line in lines: #make this more pythonic
                                 out_file.write(line)
