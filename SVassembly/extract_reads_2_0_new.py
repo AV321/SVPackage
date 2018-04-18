@@ -96,9 +96,10 @@ def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be 
 
                                 #lines_list = []
                                 #ind_list = []
-
-                                print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
+                                
                                 cur_time = time.time()
+                                print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
+                                
 
 
 
