@@ -96,8 +96,8 @@ def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be 
                         n += 1
                         if (n % 1000000 == 0): 
 
-                        print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
-                        cur_time = time.time()
+                                print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
+                                cur_time = time.time()
 
                         if (lines[1][0:16] in bcs): #TAKING ALL OF THIS OUT DOESN'T AFFECT SPEED
                         i += 1
