@@ -24,7 +24,7 @@ def extract_readsv2_0_new(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fa
         #"bcs_metr.txt" "/mnt/ix2/avitko/170621_SV_phasing/A02_bcl_to_fastq/bcs_metr.txt"
         #"/mnt/ix2/avitko/170621_SV_phasing/A02_bcl_to_fastq/out_metr"
         cur_version = 1.0
-        
+
         bc_list = bcs.split(",")
 
         lane_list = lanes.split(",")
@@ -97,9 +97,9 @@ def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be 
                                 #lines_list = []
                                 #ind_list = []
                                 
-                                cur_time = time.time()
-                                print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
                                 
+                                print >> sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
+                                cur_time = time.time()
 
 
 
