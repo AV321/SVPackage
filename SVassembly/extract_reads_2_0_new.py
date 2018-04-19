@@ -61,8 +61,8 @@ def extract_readsv2_0_new(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fa
 def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be main
 
         bcs = [] 
-        out_file = gzip.open(args_fq[3],'w')  
-        out_si_file = gzip.open(args_fq[4],'w')  
+        out_file = io.BufferedWriter(gzip.open(args_fq[3],'w')) #CHANGED THIS  
+        out_si_file = io.BufferedWriter(gzip.open(args_fq[4],'w'))
 
         with open(args_fq[2],'r') as f:
                 bcs = [line[0] for line in csv.reader(f,delimiter='\t')]
