@@ -1,7 +1,7 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python #is this necessary within package?
 
 ### LOAD THE NECESSARY PACKAGES ###
-##This is for version 2.0
+##This is for version 2.0(?)
 
 import os, sys
 import pandas as pd
@@ -15,7 +15,7 @@ import time
 
 import io
 
-def extract_readsv2_0_old(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
+def extract_readsv2_0_new(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fastq
         
         start_time = time.time()
         #"/mnt/ix1/Seq_Runs/20160122_CC3_0317/Analysis/fastq"
@@ -24,7 +24,7 @@ def extract_readsv2_0_old(fq_path, bcs, lanes, bc_file, out_dir ): #fastq, si_fa
         #"bcs_metr.txt" "/mnt/ix2/avitko/170621_SV_phasing/A02_bcl_to_fastq/bcs_metr.txt"
         #"/mnt/ix2/avitko/170621_SV_phasing/A02_bcl_to_fastq/out_metr"
         cur_version = 1.0
-        
+
         bc_list = bcs.split(",")
 
         lane_list = lanes.split(",")
@@ -67,9 +67,9 @@ def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be 
         with open(args_fq[2],'r') as f:
                 bcs = [line[0] for line in csv.reader(f,delimiter='\t')]
 
-                
+
         bcs = set(bcs)
-                
+
         n = 0
         i = 0
 
@@ -80,34 +80,41 @@ def extract_reads(args_fq): #from (args_fq) ##fastq, si_fastq  #this used to be 
                 cur_time = time.time()
               
                 
-                while 1:
+                while True: #create exit condition to break loop -- sth like if not lines
                    
                         lines = list(islice(f,8)) 
                         lines_index = list(islice(ind,4))
 
-                    #lines_list = []
-                    #ind_list = []
-
-
                         if not lines:
-                                break
-                        
-                        
+                                break 
+                    
+
                         n += 1
                         if (n % 1000000 == 0): 
+                                #out_file.write('\n'.join(lines_list))
+                                #out_si_file.write('\n'.join(ind_list))
 
-                                print >>sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
+                                #lines_list = []
+                                #ind_list = []
+                                
+                                
+                                print >> sys.stderr, "%d reads processed, %d records matched bcs in a %d second chunk" % (n, i, time.time() - cur_time)
                                 cur_time = time.time()
+
+
 
                         if (lines[1][0:16] in bcs): #TAKING ALL OF THIS OUT DOESN'T AFFECT SPEED
                                 i += 1
 
-                        for line in lines: #make this more pythonic
-                                out_file.write(line)
+                                #print len(lines)
+                                for line in lines: #make this more pythonic
+                                        out_file.write(line)
+                                        #lines_list.append(line)
 
-                        for line in lines_index: #make this more pythonic
-                                out_si_file.write(line)
+                                for line in lines_index: #make this more pythonic
+                                        out_si_file.write(line)
+                                        #ind_list.append(line)
 
 
-
-
+                       
+                   
