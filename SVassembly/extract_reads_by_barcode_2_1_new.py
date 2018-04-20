@@ -46,9 +46,9 @@ def extract_readsv2_1_new(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
 	start_time = time.time()
 	
 	bcs_list = []
-	out_r1_file = io.BufferedWriter(gzip.open(out_r1,'w'))  #can add BufferedReader/writer here?
-	out_r2_file = io.BufferedWriter(gzip.open(out_r2,'w'))
-	out_si_file = io.BufferedWriter(gzip.open(out_i1,'w'))
+	out_r1_file = gzip.open(out_r1,'w')  #can add BufferedReader/writer here?
+	out_r2_file = gzip.open(out_r2,'w')
+	out_si_file = gzip.open(out_i1,'w')
 
 
 	with open(bcs,'r') as f:
