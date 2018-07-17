@@ -10,8 +10,8 @@ from assign_sv_haps_f import assign_sv_haps
 from SVassembly import count_bcs_f
 from count_bcs_f import count_bcs #can't have "-" 
 
-from SVassembly import plotting
-from plotting import map_to_genome
+from SVassembly import map_to_genome_f
+from map_to_genome_f import map_to_genome
 
 from SVassembly import extract_reads_2_0_new
 from extract_reads_2_0_new import extract_readsv2_0_new  #LR v2.0
