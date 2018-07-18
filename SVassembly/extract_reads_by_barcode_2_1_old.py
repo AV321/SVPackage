@@ -37,7 +37,7 @@ def extract_readsv2_1_old(r1, r2, i1, bcs, out_r1, out_r2, out_i1):
 		#don't use grouper -- it's slow
 		#for (lines,lines_index) in zip(grouper(f, 8, ""),grouper(ind,8,"")):
 		while True:
-			lines_r1 = list(islice(f1,3))
+			lines_r1 = list(islice(f1,4))  #changed from 3#
 			lines_r2 = list(islice(f2,4))
 			lines_index = list(islice(ind,4))
 
