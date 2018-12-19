@@ -31,6 +31,12 @@ from InterestingContigs import interestingContigs
 from SVassembly import filt_svs
 from filt_svs import filter_svs
 
+from SVassembly import align
+from align import mappyAlign
+
+from SVassembly import mappy_contig_eval
+from mappy_contig_eval import interesting_contigs_mappy
+
 #from SVassembly import phase_svs
 #from phase_svs import phase
 
