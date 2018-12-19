@@ -1,5 +1,5 @@
 #"alignment_test.txt"
-def interesting_contigs(infile, outfile):
+def interesting_contigs_mappy(infile, outfile):
     import pandas as pd
     import ast 
 
