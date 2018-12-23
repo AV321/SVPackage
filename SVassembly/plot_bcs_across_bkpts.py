@@ -136,5 +136,5 @@ def plot_bcs_bkpt(bkpt_name, infolder, outfolder):
     figL.axvline(x=brkpt1, linewidth=1, color = 'black') 
     figR.axvline(x=brkpt2, linewidth=1, color = 'black')
     
-    path = out_folder + 'bcs_bkpt_map'
+    path = outfolder + 'bcs_bkpt_map'
     plt.savefig(path)
