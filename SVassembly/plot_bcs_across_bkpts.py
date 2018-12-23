@@ -15,7 +15,7 @@ import collections
 
 #bkpt_name = "1"
 
-#example: plot_bcs_bkpts("1", "/mnt/ix1/Projects/M002_131217_gastric/P00526/P00526_WG10_150722_gastric/A20_170516_hmw_maps/metr", "/mnt/ix1/Projects/M002_131217_gastric/P00526/P00526_WG10_150722_gastric/A20_170516_hmw_maps/metr")
+#example: plot_bcs_bkpt("1", "/mnt/ix1/Projects/M002_131217_gastric/P00526/P00526_WG10_150722_gastric/A20_170516_hmw_maps/metr", "/mnt/ix1/Projects/M002_131217_gastric/P00526/P00526_WG10_150722_gastric/A20_170516_hmw_maps/metr")
 def plot_bcs_bkpt(bkpt_name, infolder, outfolder):
     if infolder[-1] != '/':
         infolder = infolder + '/'
