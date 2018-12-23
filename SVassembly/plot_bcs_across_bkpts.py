@@ -28,17 +28,17 @@ def plot_bcs_bkpt(bkpt_name, infolder, outfolder):
     hap_bcs = pd.read_table(file_hap)
 
 
-    bkpt_name = "1"
+#     bkpt_name = "1"
 
-    file_1 = bkpt_name + "_1.bc_windows.txt"
-    file_2 = bkpt_name + "_2.bc_windows.txt"
-    file_hap =  bkpt_name + "_hap_bcs.txt"
+#     file_1 = bkpt_name + "_1.bc_windows.txt"
+#     file_2 = bkpt_name + "_2.bc_windows.txt"
+#     file_hap =  bkpt_name + "_hap_bcs.txt"
 
-    #sort barcodes by where they map (lowest coordinate to highest)
-    #read in data frames
-    df_1 = pd.read_table(file_1) 
-    df_2 = pd.read_table(file_2)
-    hap_bcs = pd.read_table(file_hap)
+#     #sort barcodes by where they map (lowest coordinate to highest)
+#     #read in data frames
+#     df_1 = pd.read_table(file_1) 
+#     df_2 = pd.read_table(file_2)
+#     hap_bcs = pd.read_table(file_hap)
 
     hap_bcs = hap_bcs.transpose()
 
