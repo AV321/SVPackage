@@ -42,5 +42,5 @@ from mappy_contig_eval import interesting_contigs_mappy
 
 #from SVassembly import plot_bcs_across_bkpts #this is an R file
 
-from SVassembly import plot_bcs_across_bkpts 
-from plot_bkpts import plot_bcs_bkpt
+from SVassembly import plot_bcs_across_bkpts
+from plot_bcs_across_bkpts import plot_bcs_bkpt
